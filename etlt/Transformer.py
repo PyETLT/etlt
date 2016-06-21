@@ -5,9 +5,9 @@ Copyright 2016 Set Based IT Consultancy
 
 Licence MIT
 """
+import abc
 import time
 import traceback
-from abc import abstractmethod
 
 
 class Transformer:
@@ -121,7 +121,7 @@ class Transformer:
         self.keys = ()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def log(self, message):
+    def _log(self, message):
         """
         Logs a message.
 
@@ -133,6 +133,14 @@ class Transformer:
 
     # ------------------------------------------------------------------------------------------------------------------
     def _test_dimension_keys(self, output):
+        """
+        Tests whether all dimension keys are found. Returns a tuple with a bool indicating the row must be parked and
+        the names of the missing dimension keys.
+
+        :param list output: The transformed row.
+
+        :rtype: (bool, str)
+        """
         park = False
         park_info = ''
         i = 0
@@ -154,13 +162,13 @@ class Transformer:
         :param list|dict|() row: The source row.
         :param Exception exception: The exception.
         """
-        self.log('Error during processing of line {0:d}.'.format(self._source_reader.row_number))
-        self.log(row)
-        self.log(str(exception))
-        self.log(traceback.format_exc())
+        self._log('Error during processing of line {0:d}.'.format(self._source_reader.row_number))
+        self._log(row)
+        self._log(str(exception))
+        self._log(traceback.format_exc())
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _transform_row(self, row):
+    def _transform_row_wrapper(self, row):
         """
         Transforms a single source row.
 
@@ -170,7 +178,7 @@ class Transformer:
 
         try:
             # Transform the naturals keys in line to technical keys.
-            output = self.transform_line(row)
+            output = self._transform_row(row)
 
             # Test all dimension keys are found.
             park, park_info = self._test_dimension_keys(output)
@@ -203,8 +211,68 @@ class Transformer:
         """
         row = self._source_reader.get_row()
         while row:
-            self._transform_row(row)
+            self._transform_row_wrapper(row)
             row = self._source_reader.get_row()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _transform_row(self, row):
+        """
+        Transforms the natural keys of dimensions to technical keys. Returns the transformed row with technical keys.
+
+        :param list|dict|() row: The source row.
+
+        :rtype list:
+        """
+        raise NotImplementedError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _load_ignored_rows(self):
+        """
+        Loads the ignored rows into the database.
+
+        :rtype: None
+        """
+        raise NotImplementedError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _load_parked_rows(self):
+        """
+        Loads the parked rows into the database.
+
+        :rtype: None
+        """
+        raise NotImplementedError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _load_transformed_rows(self):
+        """
+        Loads the successfully transformed rows into the database.
+
+        :rtype: None
+        """
+        raise NotImplementedError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _log_statistics(self):
+        """
+        Log statistics about the number of rows and number of rows per second.
+        """
+        rows_per_second_trans = self._count_total / (self._time1 - self._time0)
+        rows_per_second_load = self._count_transform / (self._time2 - self._time1)
+        rows_per_second_overall = self._count_total / (self._time3 - self._time0)
+
+        self._log('Number of rows processed            : {0:d}'.format(self._count_total))
+        self._log('Number of rows transformed          : {0:d}'.format(self._count_transform))
+        self._log('Number of rows ignored              : {0:d}'.format(self._count_ignore))
+        self._log('Number of rows parked               : {0:d}'.format(self._count_park))
+        self._log('Number of errors                    : {0:d}'.format(self._count_error))
+        self._log('Number of rows per second processed : {0:d}'.format(int(rows_per_second_trans)))
+        self._log('Number of rows per second loaded    : {0:d}'.format(int(rows_per_second_load)))
+        self._log('Number of rows per second overall   : {0:d}'.format(int(rows_per_second_overall)))
 
     # ------------------------------------------------------------------------------------------------------------------
     def transform_source_rows(self):
@@ -225,78 +293,19 @@ class Transformer:
         self._time1 = time.perf_counter()
 
         # Load transformed rows into the fact table.
-        self.load_transformed_rows()
+        self._load_transformed_rows()
 
         # Time end of loading transformed rows.
         self._time2 = time.perf_counter()
 
         # Load parked and ignored rows into the parked and ignored rows.
-        self.load_ignored_rows()
-        self.load_parked_rows()
+        self._load_ignored_rows()
+        self._load_parked_rows()
 
         # Time end of loading parked and ignored rows.
         self._time3 = time.perf_counter()
 
         # Show statistics about number of rows and performance.
-        self.log_statistics()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def log_statistics(self):
-        """
-        Log statistics about the number of rows and number of rows per second.
-        """
-        rows_per_second_trans = self._count_total / (self._time1 - self._time0)
-        rows_per_second_load = self._count_transform / (self._time2 - self._time1)
-        rows_per_second_overall = self._count_total / (self._time3 - self._time0)
-
-        self.log('Number of rows processed            : {0:d}'.format(self._count_total))
-        self.log('Number of rows transformed          : {0:d}'.format(self._count_transform))
-        self.log('Number of rows ignored              : {0:d}'.format(self._count_ignore))
-        self.log('Number of rows parked               : {0:d}'.format(self._count_park))
-        self.log('Number of errors                    : {0:d}'.format(self._count_error))
-        self.log('Number of rows per second processed : {0:d}'.format(int(rows_per_second_trans)))
-        self.log('Number of rows per second loaded    : {0:d}'.format(int(rows_per_second_load)))
-        self.log('Number of rows per second overall   : {0:d}'.format(int(rows_per_second_overall)))
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def transform_line(self, row):
-        """
-
-        :param list|dict|() row: The source row.
-
-        :rtype list:
-        """
-        raise NotImplementedError()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def load_ignored_rows(self):
-        """
-        Loads the ignored rows into the database.
-
-        :rtype: None
-        """
-        raise NotImplementedError()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def load_parked_rows(self):
-        """
-        Loads the parked rows into the database.
-
-        :rtype: None
-        """
-        raise NotImplementedError()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @abstractmethod
-    def load_transformed_rows(self):
-        """
-        Loads the successfully transformed rows into the database.
-
-        :rtype: None
-        """
-        raise NotImplementedError()
+        self._log_statistics()
 
 # ----------------------------------------------------------------------------------------------------------------------
