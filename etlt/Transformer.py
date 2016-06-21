@@ -154,7 +154,7 @@ class Transformer:
         :param list|dict|() row: The source row.
         :param Exception exception: The exception.
         """
-        self.log('Error during processing of line %d.' % self._source_reader.row_number)
+        self.log('Error during processing of line {0:d}.'.format(self._source_reader.row_number))
         self.log(row)
         self.log(str(exception))
         self.log(traceback.format_exc())
@@ -249,14 +249,14 @@ class Transformer:
         rows_per_second_load = self._count_transform / (self._time2 - self._time1)
         rows_per_second_overall = self._count_total / (self._time3 - self._time0)
 
-        self.log('Number of rows processed            : %d' % self._count_total)
-        self.log('Number of rows transformed          : %d' % self._count_transform)
-        self.log('Number of rows ignored              : %d' % self._count_ignore)
-        self.log('Number of rows parked               : %d' % self._count_park)
-        self.log('Number of errors                    : %d' % self._count_error)
-        self.log('Number of rows per second processed : %d' % int(rows_per_second_trans))
-        self.log('Number of rows per second loaded    : %d' % int(rows_per_second_load))
-        self.log('Number of rows per second overall   : %d' % int(rows_per_second_overall))
+        self.log('Number of rows processed            : {0:d}'.format(self._count_total))
+        self.log('Number of rows transformed          : {0:d}'.format(self._count_transform))
+        self.log('Number of rows ignored              : {0:d}'.format(self._count_ignore))
+        self.log('Number of rows parked               : {0:d}'.format(self._count_park))
+        self.log('Number of errors                    : {0:d}'.format(self._count_error))
+        self.log('Number of rows per second processed : {0:d}'.format(int(rows_per_second_trans)))
+        self.log('Number of rows per second loaded    : {0:d}'.format(int(rows_per_second_load)))
+        self.log('Number of rows per second overall   : {0:d}'.format(int(rows_per_second_overall)))
 
     # ------------------------------------------------------------------------------------------------------------------
     @abstractmethod
