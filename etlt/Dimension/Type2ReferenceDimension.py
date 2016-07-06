@@ -66,7 +66,7 @@ class Type2ReferenceDimension:
         if not date:
             return None
 
-        # If the natural key is known return th technical ID immediately.
+        # If the natural key is known return the technical ID immediately.
         if natural_key in self._map:
             for row in self._map[natural_key]:
                 if row[0] <= date <= row[1]:
@@ -120,7 +120,7 @@ class Type2ReferenceDimension:
     # ------------------------------------------------------------------------------------------------------------------
     def acquire_lock(self):
         """
-        In a concurrent environment override this method to acquire a lock on the dimension of dimension hierarchy.
+        In a concurrent environment override this method to acquire a lock on the dimension or dimension hierarchy.
 
         :rtype: None
         """
@@ -129,7 +129,7 @@ class Type2ReferenceDimension:
     # ------------------------------------------------------------------------------------------------------------------
     def release_lock(self):
         """
-        In a concurrent environment override this method to release a lock on the dimension of dimension hierarchy.
+        In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy.
 
         :rtype: None
         """

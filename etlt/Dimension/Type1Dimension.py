@@ -83,7 +83,7 @@ class Type1Dimension:
     # ------------------------------------------------------------------------------------------------------------------
     def acquire_lock(self):
         """
-        In a concurrent environment override this method to acquire a lock on the dimension of dimension hierarchy.
+        In a concurrent environment override this method to acquire a lock on the dimension or dimension hierarchy.
 
         :rtype: None
         """
@@ -92,7 +92,7 @@ class Type1Dimension:
     # ------------------------------------------------------------------------------------------------------------------
     def release_lock(self):
         """
-        In a concurrent environment override this method to release a lock on the dimension of dimension hierarchy.
+        In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy.
 
         :rtype: None
         """
