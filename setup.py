@@ -12,7 +12,7 @@ setup(
 
     version='0.0.4',
 
-    description='',
+    description='Extract Transform Load Transform ',
     # long_description=long_description,
 
     url='https://github.com/SetBased/py-etlt',
