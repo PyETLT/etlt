@@ -8,37 +8,6 @@
         <exec command="composer update" checkreturn="true" passthru="true"/>
     </target>
 
-    <!-- Merges the current branch with a remote branch -->
-    <target name="git-merge">
-        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH"/>
-        <input message="Your current branch is '${CURRENT_BRANCH}'. Remote branch: " propertyName="BRANCH"/>
-        <gitbranch branchname="temp" repository="."/>
-        <gitcheckout repository="." branchname="temp"/>
-        <gitpull repository="." refspec="${BRANCH}" quiet="false"/>
-        <gitcheckout repository="." branchname="${CURRENT_BRANCH}"/>
-        <gitmerge repository="." remote="temp"/>
-        <gitbranch branchname="temp" repository="." delete="true"/>
-    </target>
-
-    <!-- Merges the current branch with a remote branch in two steps: step 1 -->
-    <target name="git-merge1">
-        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH" checkreturn="true"/>
-        <exec command="git fetch -p" passthru="true" checkreturn="true"/>
-        <input message="Your current branch is '${CURRENT_BRANCH}'. Remote branch: " propertyName="BRANCH"/>
-        <gitbranch branchname="temp" repository="."/>
-        <gitcheckout repository="." branchname="temp"/>
-        <gitpull repository="." refspec="${BRANCH}" quiet="false"/>
-    </target>
-
-    <!-- Merges the current branch with a remote branch in two steps: step 2 -->
-    <target name="git-merge2">
-        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH" checkreturn="true"/>
-        <input message="Your current branch is '${CURRENT_BRANCH}'. Branch: " propertyName="BRANCH"/>
-        <gitcheckout repository="." branchname="${BRANCH}"/>
-        <gitmerge repository="." remote="temp"/>
-        <gitbranch branchname="temp" repository="." delete="true"/>
-    </target>
-
     <!-- Creates a new version/release. -->
     <!-- @todo replace semantic version with pep-396 -->
     <target name="version">
