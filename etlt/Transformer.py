@@ -6,8 +6,12 @@ Copyright 2016 Set Based IT Consultancy
 Licence MIT
 """
 import abc
+import copy
+import re
 import time
 import traceback
+
+from etlt.cleaner.WhitespaceCleaner import WhitespaceCleaner
 
 
 class Transformer:
@@ -20,10 +24,10 @@ class Transformer:
         """
         Object constructor.
 
-        :param Reader source_reader: Object for reading source rows.
-        :param Writer transformed_writer: Object for writing successfully transformed rows.
-        :param Writer parked_writer: Object for writing parked rows.
-        :param Writer ignored_writer: Object for writing ignored rows.
+        :param etlt.Reader.Reader source_reader: Object for reading source rows.
+        :param etlt.Writer.Writer transformed_writer: Object for writing successfully transformed rows.
+        :param etlt.Writer.Writer parked_writer: Object for writing parked rows.
+        :param etlt.Writer.Writer ignored_writer: Object for writing ignored rows.
         """
 
         self._count_total = 0
@@ -117,8 +121,19 @@ class Transformer:
         :type: etlt.Writer.Writer
         """
 
-        # The dimension keys in the output row.
-        self.keys = ()
+        self._mandatory_fields = []
+        """
+        The mandatory fields (or columns) in the output row.
+
+         :type list[str]:
+        """
+
+        self._steps = []
+        """
+        All _step<n> methods where n is an integer in this class sorted by n.
+
+        :type list[str]:
+        """
 
     # ------------------------------------------------------------------------------------------------------------------
     def _log(self, message):
@@ -130,29 +145,6 @@ class Transformer:
         :rtype None:
         """
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' ' + str(message))
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def _test_dimension_keys(self, output):
-        """
-        Tests whether all dimension keys are found. Returns a tuple with a bool indicating the row must be parked and
-        the names of the missing dimension keys.
-
-        :param list output: The transformed row.
-
-        :rtype: (bool, str)
-        """
-        park = False
-        park_info = ''
-        i = 0
-        n = len(self.keys)
-        while i < n:
-            if output[i] is None:
-                park = True
-                park_info += ' ' if park_info != '' else ''
-                park_info += self.keys[i]
-            i += 1
-
-        return park, park_info
 
     # ------------------------------------------------------------------------------------------------------------------
     def _log_exception(self, row, exception):
@@ -168,20 +160,38 @@ class Transformer:
         self._log(traceback.format_exc())
 
     # ------------------------------------------------------------------------------------------------------------------
+    def _find_all_step_methods(self):
+        """
+        Finds all _step<n> methods where n is an integer in this class.
+        """
+        steps = ([method for method in dir(self) if callable(getattr(self, method)) and
+                  re.match('_step\d+\d+.*', method)])
+        self._steps = sorted(steps)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _transform_rows(self):
+        """
+        Transforms all source rows.
+        """
+        self._find_all_step_methods()
+
+        for row in self._source_reader.next():
+            self._transform_row_wrapper(row)
+
+    # ------------------------------------------------------------------------------------------------------------------
     def _transform_row_wrapper(self, row):
         """
         Transforms a single source row.
 
-        :param list|dict|() row: The source row.
+        :param dict[str|str] row: The source row.
         """
         self._count_total += 1
 
         try:
             # Transform the naturals keys in line to technical keys.
-            output = self._transform_row(row)
-
-            # Test all dimension keys are found.
-            park, park_info = self._test_dimension_keys(output)
+            in_row = copy.copy(row)
+            out_row = {}
+            park_info, ignore_info = self._transform_row(in_row, out_row)
 
         except Exception as e:
             # Log the exception.
@@ -189,42 +199,74 @@ class Transformer:
             # Keep track of the number of errors.
             self._count_error += 1
             # This row must be parked.
-            park = True
             park_info = 'Exception'
             # Keep our IDE happy.
-            output = []
+            ignore_info = None
+            out_row = {}
 
-        if park:
+        if park_info:
             # Park the row.
-            park = [park_info, self._source_reader.get_source_name, self._source_reader.row_number] + row
-            self._parked_writer.put_row(park)
+            # self._parked_writer.put_row(park)
             self._count_park += 1
+        elif ignore_info:
+            # Ignore the row.
+            # self._ignore_writer.put_row(park)
+            self._count_ignore += 1
         else:
             # Write the technical keys and measures to the output file.
-            self._transformed_writer.put_row(output)
+            self._transformed_writer.write(out_row)
             self._count_transform += 1
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _transform_rows(self):
+    def _transform_row(self, in_row, out_row):
         """
-        Transforms all source rows.
+        Transforms an input row to an output row (i.e. (partial) dimensional data).
+
+        :param dict[str,str] in_row: The input row.
+        :param dict[str,T] out_row: The output row.
+
+        :rtype (str,str):
         """
-        row = self._source_reader.get_row()
-        while row:
-            self._transform_row_wrapper(row)
-            row = self._source_reader.get_row()
+        tmp_row = {}
+
+        for step in self._steps:
+            park_info, ignore_info = getattr(self, step)(in_row, tmp_row, out_row)
+            if park_info or ignore_info:
+                return park_info, ignore_info
+
+        return None, None
 
     # ------------------------------------------------------------------------------------------------------------------
-    @abc.abstractmethod
-    def _transform_row(self, row):
+    def _step00(self, in_row, tmp_row, out_row):
         """
-        Transforms the natural keys of dimensions to technical keys. Returns the transformed row with technical keys.
+        Prunes whitespace for all fields in the input row.
 
-        :param list|dict|() row: The source row.
-
-        :rtype list:
+        :param dict in_row: The input row.
+        :param dict tmp_row: Not used.
+        :param dict out_row: Not used.
         """
-        raise NotImplementedError()
+        for key, value in in_row.items():
+            in_row[key] = WhitespaceCleaner.clean(in_row[key])
+
+        return None, None
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _step99(self, in_row, tmp_row, out_row):
+        """
+        Validates all mandatory fields are in the output row and are filled.
+
+        :param dict in_row: The input row.
+        :param dict tmp_row: Not used.
+        :param dict out_row: The output row.
+        """
+        park_info = ''
+        for field in self._mandatory_fields:
+            if field not in out_row or not out_row[field]:
+                if park_info:
+                    park_info += ' '
+                park_info += field
+
+        return park_info, None
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod

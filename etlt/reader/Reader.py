@@ -10,7 +10,7 @@ import abc
 
 class Reader:
     """
-    Abstract parent class for reading (directly or indirectly) rows from the source data.
+    Abstract parent class for reading (directly or indirectly) rows from the source.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -47,11 +47,9 @@ class Reader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def get_row(self):
+    def next(self):
         """
-        Returns the next row from the source data. If all rows have been read must return None.
-
-        :rtype: None|List|Dict|()
+        Yields the next row from the source.
         """
         raise NotImplementedError()
 
