@@ -1,3 +1,12 @@
+"""
+ETLT
+
+Copyright 2016 Set Based IT Consultancy
+
+Licence MIT
+"""
+
+
 class WhitespaceCleaner:
     """
     Utility class for cleaning whitespace from strings.

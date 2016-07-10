@@ -272,7 +272,7 @@ class Transformer:
         :param dict out_row: Not used.
         """
         for key, value in in_row.items():
-            in_row[key] = WhitespaceCleaner.clean(in_row[key])
+            in_row[key] = WhitespaceCleaner.clean(value)
 
         return None, None
 

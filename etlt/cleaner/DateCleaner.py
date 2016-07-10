@@ -1,3 +1,10 @@
+"""
+ETLT
+
+Copyright 2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 import re
 
 
@@ -19,7 +26,7 @@ class DateCleaner:
         if not date:
             return date
 
-        parts = re.split('[\-/\. ]', date)
+        parts = re.split(r'[\-/\. ]', date)
 
         if len(parts) == 3 or (len(parts) == 4 and (parts[3] in ('00:00:00', '0:00:00'))):
             if len(parts[0]) == 4 and len(parts[1]) <= 2 and len(parts[2]) <= 2:
@@ -32,7 +39,7 @@ class DateCleaner:
 
             if len(parts[0]) <= 2 and len(parts[1]) <= 2 and len(parts[2]) == 2:
                 # Assume date is in  DD-MM-YY or D-M-YY format.
-                year = '19' + parts[2] if parts[2] >= '20' else '20' + parts[2];
+                year = '19' + parts[2] if parts[2] >= '20' else '20' + parts[2]
 
                 return year + '-' + ('00' + parts[1])[-2:] + '-' + ('00' + parts[0])[-2:]
 
