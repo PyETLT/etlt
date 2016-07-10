@@ -114,7 +114,7 @@ class Transformer:
         :type: etlt.writer.SqlLoaderWriter.SqlLoaderWriter
         """
 
-        self._ignored_write = ignored_writer
+        self._ignored_writer = ignored_writer
         """
         Object for writing ignored rows.
 
@@ -179,6 +179,30 @@ class Transformer:
             self._transform_row_wrapper(row)
 
     # ------------------------------------------------------------------------------------------------------------------
+    def pre_park_row(self, park_info, in_row):
+        """
+        This method will be called just be for sending an input row to be parked to the parked writer.
+
+        :param str park_info: The park info.
+        :param dict[str,str] in_row: The original input row.
+
+        :rtype: None
+        """
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def pre_ignore_row(self, ignore_info, in_row):
+        """
+        This method will be called just be for sending an input row to be ignored to the ignore writer.
+
+        :param str ignore_info: The ignore info.
+        :param dict[str,str] in_row: The original input row.
+
+        :rtype: None
+        """
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
     def _transform_row_wrapper(self, row):
         """
         Transforms a single source row.
@@ -206,11 +230,13 @@ class Transformer:
 
         if park_info:
             # Park the row.
-            # self._parked_writer.put_row(park)
+            self.pre_park_row(park_info, row)
+            self._parked_writer.write(row)
             self._count_park += 1
         elif ignore_info:
             # Ignore the row.
-            # self._ignore_writer.put_row(park)
+            self.pre_ignore_row(ignore_info, row)
+            self._ignored_writer.write(row)
             self._count_ignore += 1
         else:
             # Write the technical keys and measures to the output file.
@@ -317,6 +343,15 @@ class Transformer:
         self._log('Number of rows per second overall   : {0:d}'.format(int(rows_per_second_overall)))
 
     # ------------------------------------------------------------------------------------------------------------------
+    def pre_transform_source_rows(self):
+        """
+        This method will be called just before transforming the source rows.
+
+        :rtype: None
+        """
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
     def transform_source_rows(self):
         """
         Transforms the rows for the source system into (partial) dimensional data.
@@ -324,11 +359,13 @@ class Transformer:
         # Start timer for overall progress.
         self._time0 = time.perf_counter()
 
+        self.pre_transform_source_rows()
+
         # Transform all source rows.
         with self._source_reader:
             with self._transformed_writer:
                 with self._parked_writer:
-                    with self._ignored_write:
+                    with self._ignored_writer:
                         self._transform_rows()
 
         # Time end of transformation.
