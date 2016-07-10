@@ -24,10 +24,10 @@ class Transformer:
         """
         Object constructor.
 
-        :param etlt.Reader.Reader source_reader: Object for reading source rows.
-        :param etlt.Writer.SqlLoaderWriter transformed_writer: Object for writing successfully transformed rows.
-        :param etlt.Writer.SqlLoaderWriter parked_writer: Object for writing parked rows.
-        :param etlt.Writer.SqlLoaderWriter ignored_writer: Object for writing ignored rows.
+        :param etlt.reader.Reader.Reader source_reader: Object for reading source rows.
+        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter transformed_writer: Object for writing successfully transformed rows.
+        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter parked_writer: Object for writing parked rows.
+        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter ignored_writer: Object for writing ignored rows.
         """
 
         self._count_total = 0
@@ -104,21 +104,21 @@ class Transformer:
         """
         Object for writing successfully transformed rows.
 
-        :type: etlt.Writer.SqlLoaderWriter
+        :type: etlt.writer.SqlLoaderWriter.SqlLoaderWriter
         """
 
         self._parked_writer = parked_writer
         """
         Object for writing parked rows.
 
-        :type: etlt.Writer.SqlLoaderWriter
+        :type: etlt.writer.SqlLoaderWriter.SqlLoaderWriter
         """
 
         self._ignored_write = ignored_writer
         """
         Object for writing ignored rows.
 
-        :type: etlt.Writer.SqlLoaderWriter
+        :type: etlt.writer.SqlLoaderWriter.SqlLoaderWriter
         """
 
         self._mandatory_fields = []
