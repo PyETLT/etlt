@@ -6,6 +6,7 @@ Copyright 2016 Set Based IT Consultancy
 Licence MIT
 """
 import abc
+import copy
 
 
 class Writer:
@@ -34,7 +35,7 @@ class Writer:
 
         :rtype: list[str]
         """
-        return self._fields
+        return copy.copy(self._fields)
 
     # ------------------------------------------------------------------------------------------------------------------
     @fields.setter

@@ -6,6 +6,7 @@ Copyright 2016 Set Based IT Consultancy
 Licence MIT
 """
 import abc
+import copy
 
 
 class Reader:
@@ -40,7 +41,7 @@ class Reader:
 
         :rtype: list[str]
         """
-        return self._fields
+        return copy.copy(self._fields)
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
