@@ -18,12 +18,29 @@ class Reader:
         """
         Object constructor.
         """
+        self._fields = []
+        """
+        The fields (or columns) that this reader will read from the source.
+
+        :type list[str]:
+        """
+
         self._row_number = -1
         """
         The row number for identifying the row in the source data.
 
         :type: int
         """
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def fields(self):
+        """
+        Getter for fields.
+
+        :rtype: list[str]
+        """
+        return self._fields
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
