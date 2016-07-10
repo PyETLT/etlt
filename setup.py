@@ -10,7 +10,7 @@ here = path.abspath(path.dirname(__file__))
 setup(
     name='ETLT',
 
-    version='0.0.6',
+    version='0.0.7',
 
     description='',
     # long_description=long_description,
