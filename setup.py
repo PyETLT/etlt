@@ -10,7 +10,7 @@ here = path.abspath(path.dirname(__file__))
 setup(
     name='ETLT',
 
-    version='0.0.11',
+    version='0.0.12',
 
     description='Extract Transform Load Transform ',
     # long_description=long_description,
