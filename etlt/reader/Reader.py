@@ -44,6 +44,16 @@ class Reader:
         return copy.copy(self._fields)
 
     # ------------------------------------------------------------------------------------------------------------------
+    @fields.setter
+    def fields(self, fields):
+        """
+        Setter for fields.
+
+        :param list[str] fields: The fields (or columns) that must be read from the source.
+        """
+        self._fields = fields
+
+    # ------------------------------------------------------------------------------------------------------------------
     @property
     def row_number(self):
         """
