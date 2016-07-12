@@ -9,8 +9,14 @@ from etlt.condition.Condition import Condition
 
 
 class CompoundCondition(Condition):
+    """
+    Abstract parent class for conditions with one or more child conditions.
+    """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         self._conditions = []
         """
         The list of conditions of this compound condition.
