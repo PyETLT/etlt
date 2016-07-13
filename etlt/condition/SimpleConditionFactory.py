@@ -33,7 +33,7 @@ class SimpleConditionFactory:
 
         :rtype: str
         """
-        match = re.match(r'/^([a-z]+):(.*)/', expression)
+        match = re.search(r'^([a-z]+):(.*)$', expression)
         if not match:
             scheme = 'plain'
             actual = expression
@@ -52,7 +52,7 @@ class SimpleConditionFactory:
         :param str scheme: The scheme.
         :param callable constructor: The SimpleCondition constructor.
         """
-        if not re.match(r'/^([a-z]+)$/', scheme):
+        if not re.search(r'^[a-z]+$', scheme):
             raise ValueError('{0!s} is not a valid scheme'.format(scheme))
 
         if scheme in SimpleConditionFactory._constructors:
