@@ -27,23 +27,17 @@ class MoneyCleaner:
         if not amount:
             return amount
 
-        if re.match(r'[\. ][0-9]{3},[0-9]{2}$', amount):
+        if re.search(r'[\. ][0-9]{3},[0-9]{2}$', amount):
             # Assume amount is in 1.123,12 or 1 123,12 format (Dutch).
-            amount.replace('.', '').replace(' ', '').replace(',', '.')
+            return amount.replace('.', '').replace(' ', '').replace(',', '.')
 
-            return amount
-
-        if re.match(r'[, ][0-9]{3}\.[0-9]{2}$', amount):
+        if re.search(r'[, ][0-9]{3}\.[0-9]{2}$', amount):
             # Assume amount is in 1,123.12 or in 1 123.12 format (Engels).
-            amount.replace('.', '').replace(' ', '').replace(',', '.')
+            return amount.replace(',', '').replace(' ', '')
 
-            return amount
-
-        if re.match(r'[0-9](,[0-9]{2}$)', amount):
+        if re.search(r'[0-9](,[0-9]{2}$)', amount):
             # Assume amount is in 123,12 format (Dutch).
-            amount.replace(',', '.')
-
-            return amount
+            return amount.replace(',', '.')
 
         # Format of amount is not recognized. Return amount.
         return amount
