@@ -45,7 +45,7 @@ class DateCleaner:
 
         if len(parts) == 1 and len(date) == 8:
             # Assume date is in YYYYMMDD format.
-            return date[0:4] + '-' + date[4:2] + '-' + date[6:2]
+            return date[0:4] + '-' + date[4:6] + '-' + date[6:8]
 
         # Format not recognized. Just return the original string.
         return date
