@@ -4,3 +4,6 @@ python:
   - '3.5'
   - '3.5-dev'
   - 'nightly'
+
+script:
+  - ./bin/phing unit
