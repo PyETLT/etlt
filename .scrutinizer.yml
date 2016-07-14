@@ -10,3 +10,9 @@ filter:
     excluded_paths:
         - test/*
         - sdoc/antlr/*
+
+build:
+    tests:
+        override:
+            -
+                command: ./bin/phing unit

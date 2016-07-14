@@ -52,7 +52,7 @@
 
     <!-- Runs all unit tests-->
     <target name="unit">
-        <exec command="python3 -m unittest test/*.py" passthru="true" checkreturn="true"/>
+        <exec command="python -m unittest discover -s test -p *Test.py" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Default target -->
