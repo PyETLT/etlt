@@ -93,7 +93,7 @@ class Type2Helper:
         if isinstance(date, datetime.date):
             return date.toordinal()
 
-        raise ValueError('Unexpected type %s' % date.__class__)
+        raise ValueError('Unexpected type {0!s}'.format(date.__class__))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -111,7 +111,7 @@ class Type2Helper:
         if isinstance(date, datetime.date):
             return 'date'
 
-        raise ValueError('Unexpected type %s' % date.__class__)
+        raise ValueError('Unexpected type {0!s}'.format(date.__class__))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _sort_data(self):
@@ -356,7 +356,7 @@ class Type2Helper:
                 row[self._key_start_date] = datetime.date.fromordinal(row[self._key_start_date])
                 row[self._key_end_date] = datetime.date.fromordinal(row[self._key_end_date])
             else:
-                raise ValueError('Unexpected date type %s' % self._date_type)
+                raise ValueError('Unexpected date type {0!s}'.format(self._date_type))
 
     # ------------------------------------------------------------------------------------------------------------------
     def merge(self, keys):
