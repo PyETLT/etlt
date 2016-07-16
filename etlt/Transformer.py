@@ -165,7 +165,7 @@ class Transformer:
         Finds all _step<n> methods where n is an integer in this class.
         """
         steps = ([method for method in dir(self) if callable(getattr(self, method)) and
-                  re.match('_step\d+\d+.*', method)])
+                  re.match(r'_step\d+\d+.*', method)])
         self._steps = sorted(steps)
 
     # ------------------------------------------------------------------------------------------------------------------
