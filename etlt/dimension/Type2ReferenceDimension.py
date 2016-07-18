@@ -9,6 +9,9 @@ import abc
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+import datetime
+
+
 class Type2ReferenceDimension:
     """
     Abstract class for type2 dimensions for which the reference data is supplied with date intervals.
@@ -77,6 +80,11 @@ class Type2ReferenceDimension:
         self.acquire_lock()
         try:
             row = self.call_stored_procedure(natural_key, date, enhancement)
+            # Convert dates to strings in ISO 8601 format.
+            if isinstance(row[self._key_date_start], datetime.date):
+                row[self._key_date_start] = row[self._key_date_start].isoformat()
+            if isinstance(row[self._key_date_end], datetime.date):
+                row[self._key_date_end] = row[self._key_date_end].isoformat()
         finally:
             self.release_lock()
 
