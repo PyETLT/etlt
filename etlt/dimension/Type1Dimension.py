@@ -8,7 +8,6 @@ Licence MIT
 import abc
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class Type1Dimension:
     """
     Abstract parent class for translating natural key to a technical key of a type 1 dimension.
