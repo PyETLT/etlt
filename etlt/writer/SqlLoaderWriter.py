@@ -61,6 +61,26 @@ class SqlLoaderWriter(Writer):
         self._file.close()
 
     # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def filename(self):
+        """
+        Getter for filename.
+
+        :rtype: list[str]
+        """
+        return self._filename
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def encoding(self):
+        """
+        Getter for encoding.
+
+        :rtype: list[str]
+        """
+        return self._encoding
+
+    # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def get_bulk_load_sql(self, table_name):
         """
