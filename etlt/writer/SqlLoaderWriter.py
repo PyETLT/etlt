@@ -66,7 +66,7 @@ class SqlLoaderWriter(Writer):
         """
         Getter for filename.
 
-        :rtype: list[str]
+        :rtype: str
         """
         return self._filename
 
@@ -76,7 +76,7 @@ class SqlLoaderWriter(Writer):
         """
         Getter for encoding.
 
-        :rtype: list[str]
+        :rtype: str
         """
         return self._encoding
 
