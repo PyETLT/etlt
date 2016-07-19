@@ -1,7 +1,9 @@
+.coverage
 .idea/
 bin/
 composer.lock
 dist/
 ETLT.egg-info/
+/test/html/
 vendor/
 *.pyc

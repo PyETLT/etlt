@@ -52,7 +52,8 @@
 
     <!-- Runs all unit tests-->
     <target name="unit">
-        <exec command="python -m unittest discover -s test -p *Test.py" passthru="true" checkreturn="true"/>
+        <exec command="coverage3 run -m unittest discover -s test -p *Test.py" passthru="true" checkreturn="true"/>
+        <exec command="coverage3 html" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Default target -->

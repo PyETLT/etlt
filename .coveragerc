@@ -1,6 +1,8 @@
 [run]
 branch = True
 data_file = .coverage
+source = etlt
+omit = test/*
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -24,3 +26,6 @@ ignore_errors = True
 
 [xml]
 output = coverage.xml
+
+[html]
+directory = test/html/
