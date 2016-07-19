@@ -144,7 +144,8 @@ class Transformer:
 
         :rtype None:
         """
-        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' ' + str(message))
+        #  @tod Replace with log package.
+        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' ' + str(message), flush=True)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _log_exception(self, row, exception):
