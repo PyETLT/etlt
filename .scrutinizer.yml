@@ -13,7 +13,15 @@ filter:
         - test/*
 
 build:
+    dependencies:
+        before:
+            -
+                command: pip3 install coverage
     tests:
         override:
             -
-                command: python -m unittest discover -s test -p *Test.py
+                command: coverage run -m unittest discover -s test -p *Test.py
+                coverage:
+                    file: '.coverage'
+                    config_file: '.coveragerc'
+                    format: 'py-cc'
