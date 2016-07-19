@@ -10,7 +10,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='ETLT',
 
-    version='0.0.20',
+    version='0.0.21',
 
     description='Extract Transform Load - but not in that strict order',
     long_description=long_description,
