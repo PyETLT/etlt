@@ -25,7 +25,8 @@ class Transformer:
         Object constructor.
 
         :param etlt.reader.Reader.Reader source_reader: Object for reading source rows.
-        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter transformed_writer: Object for writing successfully transformed rows.
+        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter transformed_writer: Object for writing successfully
+                                                                               transformed rows.
         :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter parked_writer: Object for writing parked rows.
         :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter ignored_writer: Object for writing ignored rows.
         """
@@ -136,7 +137,8 @@ class Transformer:
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _log(self, message):
+    @staticmethod
+    def _log(message):
         """
         Logs a message.
 
