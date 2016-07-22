@@ -144,11 +144,11 @@ class Transformer:
 
         :rtype None:
         """
-        #  @tod Replace with log package.
+        #  @todo Replace with log package.
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' ' + str(message), flush=True)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _log_exception(self, row, exception):
+    def _handle_exception(self, row, exception):
         """
         Logs an exception occurred during transformation of a row.
 
@@ -220,7 +220,7 @@ class Transformer:
 
         except Exception as e:
             # Log the exception.
-            self._log_exception(row, e)
+            self._handle_exception(row, e)
             # Keep track of the number of errors.
             self._count_error += 1
             # This row must be parked.
