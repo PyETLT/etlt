@@ -232,16 +232,16 @@ class Transformer:
         if park_info:
             # Park the row.
             self.pre_park_row(park_info, row)
-            self._parked_writer.write(row)
+            self._parked_writer.writerow(row)
             self._count_park += 1
         elif ignore_info:
             # Ignore the row.
             self.pre_ignore_row(ignore_info, row)
-            self._ignored_writer.write(row)
+            self._ignored_writer.writerow(row)
             self._count_ignore += 1
         else:
             # Write the technical keys and measures to the output file.
-            self._transformed_writer.write(out_row)
+            self._transformed_writer.writerow(out_row)
             self._count_transform += 1
 
     # ------------------------------------------------------------------------------------------------------------------

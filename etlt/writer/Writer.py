@@ -49,7 +49,7 @@ class Writer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def write(self, row):
+    def writerow(self, row):
         """
         Writes a row to the destination.
 
