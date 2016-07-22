@@ -6,7 +6,6 @@ Copyright 2016 Set Based IT Consultancy
 Licence MIT
 """
 import copy
-import datetime
 
 from etlt.helper.Allen import Allen
 from etlt.helper.Type2Helper import Type2Helper
