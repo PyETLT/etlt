@@ -38,7 +38,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge01b(self):
         """
-        Test condense with 1 interval and 2 rows.
+        Test condense with 1 interval and 2 rows (X is equal to Y).
         """
         rows = [{'year':   '2010',
                  'period': '1',
@@ -63,7 +63,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge02a(self):
         """
-        Test condense with 2 distinct intervals and 2 rows.
+        Test condense with 2 distinct intervals and 2 rows (X takes place before Y).
         """
         rows = [{'year':   '2010',
                  'period': '1',
@@ -121,9 +121,37 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
+    def test_merge02c(self):
+        """
+        Test condense with 2 distinct intervals and 2 rows (X takes place before Y).
+        """
+        rows = [{'year':   '2010',
+                 'period': '2',
+                 'start':  '2010-02-01',
+                 'end':    '2010-02-28'},
+                {'year':   '2010',
+                 'period': '1',
+                 'start':  '2010-01-01',
+                 'end':    '2010-01-31'}]
+
+        expected = [{'year':  '2010',
+                     'start': '2010-01-01',
+                     'end':   '2010-01-31'},
+                    {'year':  '2010',
+                     'start': '2010-02-01',
+                     'end':   '2010-02-28'}]
+
+        helper = Type2CondenseHelper('start', 'end', ['year'])
+        helper.prepare_data(rows)
+        actual = helper.condense()
+        self._drop_field(actual, 'period')
+
+        self.assertEqual(expected, actual)
+
+    # ------------------------------------------------------------------------------------------------------------------
     def test_merge03a(self):
         """
-        Test condense with 2 overlapping intervals and 2 rows.
+        Test condense with 2 overlapping intervals and 2 rows (X overlaps with Y).
         """
         rows = [{'year':   '2010',
                  'period': '1',
@@ -189,9 +217,40 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
+    def test_merge03c(self):
+        """
+        Test condense with 2 overlapping intervals and 2 rows (X overlaps with Y).
+        """
+        rows = [{'year':   '2010',
+                 'period': '2',
+                 'start':  '2010-02-01',
+                 'end':    '2010-03-31'},
+                {'year':   '2010',
+                 'period': '1',
+                 'start':  '2010-01-01',
+                 'end':    '2010-02-28'}]
+
+        expected = [{'year':  '2010',
+                     'start': '2010-01-01',
+                     'end':   '2010-01-31'},
+                    {'year':  '2010',
+                     'start': '2010-02-01',
+                     'end':   '2010-02-28'},
+                    {'year':  '2010',
+                     'start': '2010-03-01',
+                     'end':   '2010-03-31'}]
+
+        helper = Type2CondenseHelper('start', 'end', ['year'])
+        helper.prepare_data(rows)
+        actual = helper.condense()
+        self._drop_field(actual, 'period')
+
+        self.assertEqual(expected, actual)
+
+    # ------------------------------------------------------------------------------------------------------------------
     def test_merge04a(self):
         """
-        Test condense with 2 overlapping intervals and 2 rows.
+        Test condense with 2 overlapping intervals and 2 rows (X starts Y).
         """
         rows = [{'year':   '2010',
                  'period': '1',
@@ -251,7 +310,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge05a(self):
         """
-        Test condense with 2 overlapping intervals and 2 rows.
+        Test condense with 2 overlapping intervals and 2 rows (X during Y).
         """
         rows = [{'year':   '2010',
                  'period': '1',
@@ -315,9 +374,40 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
+    def test_merge05c(self):
+        """
+        Test condense with 2 overlapping intervals and 2 rows (X during Y).
+        """
+        rows = [{'year':   '2010',
+                 'period': '2',
+                 'start':  '2010-01-01',
+                 'end':    '2010-03-31'},
+                {'year':   '2010',
+                 'period': '1',
+                 'start':  '2010-02-01',
+                 'end':    '2010-02-28'}]
+
+        expected = [{'year':  '2010',
+                     'start': '2010-01-01',
+                     'end':   '2010-01-31'},
+                    {'year':  '2010',
+                     'start': '2010-02-01',
+                     'end':   '2010-02-28'},
+                    {'year':  '2010',
+                     'start': '2010-03-01',
+                     'end':   '2010-03-31'}]
+
+        helper = Type2CondenseHelper('start', 'end', ['year'])
+        helper.prepare_data(rows)
+        actual = helper.condense()
+        self._drop_field(actual, 'period')
+
+        self.assertEqual(expected, actual)
+
+    # ------------------------------------------------------------------------------------------------------------------
     def test_merge06a(self):
         """
-        Test condense with 2 overlapping intervals and 2 rows
+        Test condense with 2 overlapping intervals and 2 rows (X finishes Y).
         """
         rows = [{'year':   '2010',
                  'period': '1',
@@ -358,6 +448,34 @@ class Type2CondenseHelperTest(unittest.TestCase):
                 {'year':   '2010',
                  'period': '3',
                  'start':  '2010-01-01',
+                 'end':    '2010-03-31'}]
+
+        expected = [{'year':  '2010',
+                     'start': '2010-01-01',
+                     'end':   '2010-02-28'},
+                    {'year':  '2010',
+                     'start': '2010-03-01',
+                     'end':   '2010-03-31'}]
+
+        helper = Type2CondenseHelper('start', 'end', ['year'])
+        helper.prepare_data(rows)
+        actual = helper.condense()
+        self._drop_field(actual, 'period')
+
+        self.assertEqual(expected, actual)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge06c(self):
+        """
+        Test condense with 2 overlapping intervals and 2 rows (X finishes Y).
+        """
+        rows = [{'year':   '2010',
+                 'period': '2',
+                 'start':  '2010-01-01',
+                 'end':    '2010-03-31'},
+                {'year':   '2010',
+                 'period': '1',
+                 'start':  '2010-03-01',
                  'end':    '2010-03-31'}]
 
         expected = [{'year':  '2010',
@@ -448,21 +566,21 @@ class Type2CondenseHelperTest(unittest.TestCase):
                  'start':  '2010-05-01',
                  'end':    '2010-05-31'}]
 
-        expected = [{'year':   '2010',
-                     'start':  '2010-01-01',
-                     'end':    '2010-01-31'},
-                    {'year':   '2010',
-                     'start':  '2010-02-01',
-                     'end':    '2010-02-28'},
-                    {'year':   '2010',
-                     'start':  '2010-03-01',
-                     'end':    '2010-04-30'},
-                    {'year':   '2010',
-                     'start':  '2010-05-01',
-                     'end':    '2010-05-31'},
-                    {'year':   '2010',
-                     'start':  '2010-06-01',
-                     'end':    '2010-12-31'}]
+        expected = [{'year':  '2010',
+                     'start': '2010-01-01',
+                     'end':   '2010-01-31'},
+                    {'year':  '2010',
+                     'start': '2010-02-01',
+                     'end':   '2010-02-28'},
+                    {'year':  '2010',
+                     'start': '2010-03-01',
+                     'end':   '2010-04-30'},
+                    {'year':  '2010',
+                     'start': '2010-05-01',
+                     'end':   '2010-05-31'},
+                    {'year':  '2010',
+                     'start': '2010-06-01',
+                     'end':   '2010-12-31'}]
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
@@ -505,21 +623,21 @@ class Type2CondenseHelperTest(unittest.TestCase):
                  'start':  '2010-05-01',
                  'end':    '2010-05-31'}]
 
-        expected = [{'year':   '2010',
-                     'start':  '2010-01-01',
-                     'end':    '2010-01-31'},
-                    {'year':   '2010',
-                     'start':  '2010-02-01',
-                     'end':    '2010-02-28'},
-                    {'year':   '2010',
-                     'start':  '2010-03-01',
-                     'end':    '2010-04-30'},
-                    {'year':   '2010',
-                     'start':  '2010-05-01',
-                     'end':    '2010-05-31'},
-                    {'year':   '2010',
-                     'start':  '2010-06-01',
-                     'end':    '2010-12-31'}]
+        expected = [{'year':  '2010',
+                     'start': '2010-01-01',
+                     'end':   '2010-01-31'},
+                    {'year':  '2010',
+                     'start': '2010-02-01',
+                     'end':   '2010-02-28'},
+                    {'year':  '2010',
+                     'start': '2010-03-01',
+                     'end':   '2010-04-30'},
+                    {'year':  '2010',
+                     'start': '2010-05-01',
+                     'end':   '2010-05-31'},
+                    {'year':  '2010',
+                     'start': '2010-06-01',
+                     'end':   '2010-12-31'}]
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
