@@ -64,7 +64,7 @@ class Type2CondenseHelper(Type2Helper):
         if relation == Allen.X_EQUAL_Y:
             return None  # [(start1, end1)]
 
-        raise ValueError('Unexpected relation %d' % relation)
+        raise ValueError('Unexpected relation {0:d}'.format(relation))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
