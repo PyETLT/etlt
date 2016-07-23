@@ -147,7 +147,7 @@ class Type2Helper:
 
         :rtype: list[dict[str,T]]
         """
-        rows = sorted(rows, key=lambda row: (row[self._key_start_date], row[self._key_end_date]))
+        sorted(rows, key=lambda row: (row[self._key_start_date], row[self._key_end_date]))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
