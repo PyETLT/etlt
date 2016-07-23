@@ -235,7 +235,7 @@ class Type2JoinHelper(Type2Helper):
             tmp = self._pass1(keys, rows)
             tmp = self._pass2(keys, tmp)
             if tmp:
-                self._rows_sort(tmp)
+                tmp = self._rows_sort(tmp)
                 tmp = self._pass4(tmp)
                 self._rows_int2date(tmp)
 
