@@ -120,17 +120,6 @@ class Type2JoinHelper(Type2Helper):
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _pass3(self, rows):
-        """
-        Returns a list of rows sorted by start and end date.
-
-        :param list[dict[str,T]] rows: The list of rows.
-
-        :rtype: list[dict[str,T]]
-        """
-        return sorted(rows, key=lambda row: (row[self._key_start_date], row[self._key_end_date]))
-
-    # ------------------------------------------------------------------------------------------------------------------
     def _pass4(self, rows):
         """
         Merges adjacent and overlapping rows in the same group (i.e. with the same natural key). With proper reference
@@ -198,13 +187,14 @@ class Type2JoinHelper(Type2Helper):
                     # row during prev_row. Should not occur with proper reference data.
                     # prev_row: |----------------|
                     # row:           |------|
-                    if not self._equal(prev_row, row):
+                    # Note: the interval with the most recent start date prevails. Hence, the interval after
+                    # row[self._key_end_date] is discarded.
+                    if self._equal(prev_row, row):
+                        prev_row[self._key_end_date] = row[self._key_end_date]
+                    else:
                         prev_row[self._key_end_date] = row[self._key_start_date] - 1
                         ret.append(prev_row)
                         prev_row = row
-                        # Note: the interval after row[self._key_end_date] is discarded.
-
-                    # Note: if the two rows are identical (except for start and end date) nothing to do.
                 elif relation == Allen.X_FINISHES_Y_INVERSE:
                     # row finishes prev_row. Should not occur with proper reference data.
                     # prev_row: |----------------|
@@ -218,8 +208,9 @@ class Type2JoinHelper(Type2Helper):
                 else:
                     # Not in _pass3 the rows are sorted such that.
                     # prev_row[self._key_begin_date] <= row[self._key_begin_date]. Hence the following relation should
-                    # not occur: X_FINISHES_Y, X_BEFORE_Y_INVERSE, X_MEETS_Y_INVERSE, X_OVERLAPS_WITH_Y_INVERSE, and
-                    # X_STARTS_Y_INVERSE. Hence, we covered all 13 relations in Allen's interval algebra.
+                    # not occur: X_DURING_Y,  X_FINISHES_Y, X_BEFORE_Y_INVERSE, X_MEETS_Y_INVERSE,
+                    # X_OVERLAPS_WITH_Y_INVERSE, and X_STARTS_Y_INVERSE. Hence, we covered all 13 relations in Allen's
+                    # interval algebra.
                     raise ValueError('Data is not sorted properly. Relation: %d' % relation)
             else:
                 prev_row = row
@@ -244,7 +235,7 @@ class Type2JoinHelper(Type2Helper):
             tmp = self._pass1(keys, rows)
             tmp = self._pass2(keys, tmp)
             if tmp:
-                tmp = self._pass3(tmp)
+                self._rows_sort(tmp)
                 tmp = self._pass4(tmp)
                 self._rows_int2date(tmp)
 

@@ -10,6 +10,21 @@ class Type2JoinHelperTest(unittest.TestCase):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
+    def test_merge00(self):
+        """
+        Test merge with nor rows.
+        :return:
+        """
+        rows = []
+        expected = []
+
+        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([('start2', 'end2')])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
     def test_merge01(self):
         """
         Test merge with Allen.X_BEFORE_Y intervals.
@@ -192,7 +207,154 @@ class Type2JoinHelperTest(unittest.TestCase):
         self.assertListEqual(rows, expected)
 
     # ------------------------------------------------------------------------------------------------------------------
+    def test_merge08(self):
+        """
+        Test merge with Allen.X_BEFORE_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      '2',
+                 'c':      3,
+                 'start1': '2000-03-01',
+                 'end1':   '2000-03-31',
+                 'start2': '2000-01-01',
+                 'end2':   '2000-01-31',
+                 'value1': 10.0}]
+
+        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([('start2', 'end2')])
+
+        self.assertListEqual(rows, [])
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge09(self):
+        """
+        Test merge with Allen.X_MEETS_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start1': '2000-02-01',
+                 'end1':   '2000-02-29',
+                 'start2': '2000-01-01',
+                 'end2':   '2000-01-31',
+                 'value1': 10.0}]
+
+        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([('start2', 'end2')])
+
+        self.assertListEqual(rows, [])
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge10(self):
+        """
+        Test merge with Allen.X_OVERLAPS_WITH_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start1': '2000-02-01',
+                 'end1':   '2000-02-29',
+                 'start2': '2000-01-01',
+                 'end2':   '2000-01-31',
+                 'value1': 10.0}]
+
+        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([('start2', 'end2')])
+
+        self.assertListEqual(rows, [])
+
+    # ------------------------------------------------------------------------------------------------------------------
     def test_merge11(self):
+        """
+        Test merge with Allen.X_STARTS_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start1': '2000-01-01',
+                 'end1':   '2000-02-29',
+                 'start2': '2000-01-01',
+                 'end2':   '2000-01-31',
+                 'value1': 10.0}]
+
+        expected = [{'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start1': '2000-01-01',
+                     'end1':   '2000-01-31',
+                     'value1': 10.0}]
+
+        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([('start2', 'end2')])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge12(self):
+        """
+        Test merge with Allen.X_DURING_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start1': '2000-01-01',
+                 'end1':   '2000-03-31',
+                 'start2': '2000-02-01',
+                 'end2':   '2000-02-29',
+                 'value1': 10.0}]
+
+        expected = [{'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start1': '2000-02-01',
+                     'end1':   '2000-02-29',
+                     'value1': 10.0}]
+
+        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([('start2', 'end2')])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge13(self):
+        """
+        Test merge with Allen.X_FINISHES_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start1': '2000-01-01',
+                 'end1':   '2000-03-31',
+                 'start2': '2000-02-01',
+                 'end2':   '2000-03-31',
+                 'value1': 10.0}]
+
+        expected = [{'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start1': '2000-02-01',
+                     'end1':   '2000-03-31',
+                     'value1': 10.0}]
+
+        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([('start2', 'end2')])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge21a(self):
         """
         Test merge with Allen.X_BEFORE_Y intervals.
         :return:
@@ -219,7 +381,34 @@ class Type2JoinHelperTest(unittest.TestCase):
         self.assertListEqual(expected, rows)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge12(self):
+    def test_merge21b(self):
+        """
+        Test merge with Allen.X_BEFORE_Y intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-01-01',
+                 'end':    '2000-01-31',
+                 'value1': 10.0},
+                {'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-03-01',
+                 'end':    '2000-03-31',
+                 'value1': 11.0}]
+
+        expected = copy.copy(rows)
+
+        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([])
+
+        self.assertListEqual(expected, rows)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge22a(self):
         """
         Test merge with Allen.X_MEETS_Y intervals.
         :return:
@@ -251,7 +440,34 @@ class Type2JoinHelperTest(unittest.TestCase):
         self.assertListEqual(expected, rows)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge13a(self):
+    def test_merge22b(self):
+        """
+        Test merge with Allen.X_MEETS_Y intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-01-01',
+                 'end':    '2000-01-31',
+                 'value1': 10.0},
+                {'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-02-01',
+                 'end':    '2000-02-29',
+                 'value1': 11.0}]
+
+        expected = copy.copy(rows)
+
+        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([])
+
+        self.assertListEqual(expected, rows)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge23a(self):
         """
         Test merge with Allen.X_OVERLAPS_WITH_Y intervals.
         :return:
@@ -283,7 +499,7 @@ class Type2JoinHelperTest(unittest.TestCase):
         self.assertListEqual(rows, expected)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge13b(self):
+    def test_merge23b(self):
         """
         Test merge with Allen.X_OVERLAPS_WITH_Y intervals.
         :return:
@@ -321,7 +537,7 @@ class Type2JoinHelperTest(unittest.TestCase):
         self.assertListEqual(rows, expected)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge14a(self):
+    def test_merge24a(self):
         """
         Test merge with Allen.X_STARTS_Y intervals.
         :return:
@@ -353,7 +569,7 @@ class Type2JoinHelperTest(unittest.TestCase):
         self.assertListEqual(rows, expected)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge14b(self):
+    def test_merge24b(self):
         """
         Test merge with Allen.X_STARTS_Y intervals.
         :return:
@@ -385,99 +601,7 @@ class Type2JoinHelperTest(unittest.TestCase):
         self.assertListEqual(rows, expected)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge15a(self):
-        """
-        Test merge with Allen.X_DURING_Y intervals.
-        :return:
-        """
-        rows = [{'a':      1,
-                 'b':      2,
-                 'c':      3,
-                 'start':  '2000-01-01',
-                 'end':    '2000-02-29',
-                 'value1': 10.0},
-                {'a':      1,
-                 'b':      2,
-                 'c':      3,
-                 'start':  '2000-01-01',
-                 'end':    '2000-02-29',
-                 'value1': 10.0}]
-
-        expected = [{'a':      1,
-                     'b':      2,
-                     'c':      3,
-                     'start':  '2000-01-01',
-                     'end':    '2000-02-29',
-                     'value1': 10.0}]
-
-        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
-        helper.prepare_data(rows)
-        rows = helper.merge([])
-
-        self.assertListEqual(rows, expected)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def test_merge15b(self):
-        """
-        Test merge with Allen.X_DURING_Y intervals.
-        :return:
-        """
-        rows = [{'a':      1,
-                 'b':      2,
-                 'c':      3,
-                 'start':  '2000-01-01',
-                 'end':    '2000-02-29',
-                 'value1': 10.0},
-                {'a':      1,
-                 'b':      2,
-                 'c':      3,
-                 'start':  '2000-01-01',
-                 'end':    '2000-02-29',
-                 'value1': 11.0}]
-
-        expected = [{'a':      1,
-                     'b':      2,
-                     'c':      3,
-                     'start':  '2000-01-01',
-                     'end':    '2000-02-29',
-                     'value1': 11.0}]
-
-        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
-        helper.prepare_data(rows)
-        rows = helper.merge([])
-
-        self.assertListEqual(rows, expected)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def test_merge16(self):
-        """
-        Test merge with Allen.X_FINISHES_Y intervals.
-        :return:
-        """
-        rows = [{'a':      1,
-                 'b':      2,
-                 'c':      3,
-                 'start1': '2000-02-01',
-                 'end1':   '2000-03-31',
-                 'start2': '2000-01-01',
-                 'end2':   '2000-03-31',
-                 'value1': 10.0}]
-
-        expected = [{'a':      1,
-                     'b':      2,
-                     'c':      3,
-                     'start1': '2000-02-01',
-                     'end1':   '2000-03-31',
-                     'value1': 10.0}]
-
-        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
-        helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
-
-        self.assertListEqual(rows, expected)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def test_merge17(self):
+    def test_merge25a(self):
         """
         Test merge with Allen.X_EQUAL_Y intervals.
         :return:
@@ -485,22 +609,167 @@ class Type2JoinHelperTest(unittest.TestCase):
         rows = [{'a':      1,
                  'b':      2,
                  'c':      3,
-                 'start1': '2000-02-01',
-                 'end1':   '2000-03-31',
-                 'start2': '2000-02-01',
-                 'end2':   '2000-03-31',
+                 'start':  '2000-01-01',
+                 'end':    '2000-02-29',
+                 'value1': 10.0},
+                {'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-01-01',
+                 'end':    '2000-02-29',
                  'value1': 10.0}]
 
         expected = [{'a':      1,
                      'b':      2,
                      'c':      3,
-                     'start1': '2000-02-01',
-                     'end1':   '2000-03-31',
+                     'start':  '2000-01-01',
+                     'end':    '2000-02-29',
                      'value1': 10.0}]
 
-        helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
+        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        rows = helper.merge([])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge26a(self):
+        """
+        Test merge with Allen.X_DURING_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-01-01',
+                 'end':    '2000-12-31',
+                 'value1': 10.0},
+                {'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-02-01',
+                 'end':    '2000-02-29',
+                 'value1': 10.0}]
+
+        expected = [{'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start':  '2000-01-01',
+                     'end':    '2000-02-29',
+                     'value1': 10.0}]
+
+        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge26b(self):
+        """
+        Test merge with Allen.X_DURING_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-01-01',
+                 'end':    '2000-12-31',
+                 'value1': 10.0},
+                {'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-02-01',
+                 'end':    '2000-02-29',
+                 'value1': 11.0}]
+
+        expected = [{'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start':  '2000-01-01',
+                     'end':    '2000-01-31',
+                     'value1': 10.0},
+                    {'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start':  '2000-02-01',
+                     'end':    '2000-02-29',
+                     'value1': 11.0}]
+
+        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge27a(self):
+        """
+        Test merge with Allen.X_FINISHES_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-01-01',
+                 'end':    '2000-12-31',
+                 'value1': 10.0},
+                {'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-12-01',
+                 'end':    '2000-12-31',
+                 'value1': 10.0}]
+
+        expected = [{'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start':  '2000-01-01',
+                     'end':    '2000-12-31',
+                     'value1': 10.0}]
+
+        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([])
+
+        self.assertListEqual(rows, expected)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_merge27b(self):
+        """
+        Test merge with Allen.X_FINISHES_Y_INVERSE intervals.
+        :return:
+        """
+        rows = [{'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-01-01',
+                 'end':    '2000-12-31',
+                 'value1': 10.0},
+                {'a':      1,
+                 'b':      2,
+                 'c':      3,
+                 'start':  '2000-12-01',
+                 'end':    '2000-12-31',
+                 'value1': 11.0}]
+
+        expected = [{'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start':  '2000-01-01',
+                     'end':    '2000-11-30',
+                     'value1': 10.0},
+                    {'a':      1,
+                     'b':      2,
+                     'c':      3,
+                     'start':  '2000-12-01',
+                     'end':    '2000-12-31',
+                     'value1': 11.0}
+                    ]
+
+        helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
+        helper.prepare_data(rows)
+        rows = helper.merge([])
 
         self.assertListEqual(rows, expected)
 
