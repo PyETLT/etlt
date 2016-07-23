@@ -184,6 +184,17 @@ class Type2Helper:
             self.rows[natural_key] = rows
 
     # ------------------------------------------------------------------------------------------------------------------
+    def get_rows(self):
+        """
+        Returns the rows of this Type2Helper.
+        """
+        ret = []
+        for _, rows in self.rows.items():
+            ret.extend(rows)
+
+        return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
     def prepare_data(self, rows):
         """
         Sets and prepares the rows. The rows are stored in groups in a dictionary. A group is a list of rows with the
