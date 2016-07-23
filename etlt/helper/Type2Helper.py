@@ -168,6 +168,22 @@ class Type2Helper:
         raise ValueError('Unexpected type {0!s}'.format(date.__class__))
 
     # ------------------------------------------------------------------------------------------------------------------
+    def enumerate(self, name, start=1):
+        """
+        Enumerates all rows such that the natural key and the ordinal number are a unique key.
+
+        :param str name: The key holding the ordinal number.
+        :param start: The start of the ordinal numbers. Foreach natural key the first row has this ordinal number.
+        """
+        for natural_key, rows in self.rows.items():
+            rows = self._rows_sort(rows)
+            ordinal = start
+            for row in rows:
+                row[name] = ordinal
+                ordinal += 1
+            self.rows[natural_key] = rows
+
+    # ------------------------------------------------------------------------------------------------------------------
     def prepare_data(self, rows):
         """
         Sets and prepares the rows. The rows are stored in groups in a dictionary. A group is a list of rows with the
