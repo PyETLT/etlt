@@ -133,7 +133,12 @@ class Type2JoinHelper(Type2Helper):
     # ------------------------------------------------------------------------------------------------------------------
     def _pass4(self, rows):
         """
-        Merges adjacent and overlapping rows in the same group (i.e. with the same natural key).
+        Merges adjacent and overlapping rows in the same group (i.e. with the same natural key). With proper reference
+        data overlapping rows MUST not occur. However, this  method can handle overlapping rows. Overlapping rows are
+        resolved as follows:
+        * The interval with the most recent begin date prevails for the overlapping period.
+        * If the begin dates are the same the interval with the most recent end date prevails.
+        * If the begin and end dates are equal the last row in the data set prevails.
 
         :param list[dict[str,T]] rows: The rows in a group (i.e. with the same natural key).
         .
@@ -150,10 +155,14 @@ class Type2JoinHelper(Type2Helper):
                                           row[self._key_end_date])
                 if relation == Allen.X_BEFORE_Y:
                     # Two rows with distinct intervals.
+                    # prev_row: |----|
+                    # row:                 |-----|
                     ret.append(prev_row)
                     prev_row = row
                 elif relation == Allen.X_MEETS_Y:
                     # The two rows are adjacent.
+                    # prev_row: |-------|
+                    # row:               |-------|
                     if self._equal(prev_row, row):
                         # The two rows are identical (except for start and end date) and adjacent. Combine the two rows
                         # into one row.
@@ -163,7 +172,9 @@ class Type2JoinHelper(Type2Helper):
                         ret.append(prev_row)
                         prev_row = row
                 elif relation == Allen.X_OVERLAPS_WITH_Y:
-                    # Should not occur with proper reference data.
+                    # prev_row overlaps row. Should not occur with proper reference data.
+                    # prev_row: |-----------|
+                    # row:            |----------|
                     if self._equal(prev_row, row):
                         # The two rows are identical (except for start and end date) and overlapping. Combine the two
                         # rows into one row.
@@ -174,13 +185,42 @@ class Type2JoinHelper(Type2Helper):
                         ret.append(prev_row)
                         prev_row = row
                 elif relation == Allen.X_STARTS_Y:
-                    # Should not occur with proper reference data.
+                    # prev_row start row. Should not occur with proper reference data.
+                    # prev_row: |------|
+                    # row:      |----------------|
                     prev_row = row
                 elif relation == Allen.X_EQUAL_Y:
                     # Can happen when the reference data sets are joined without respect for date intervals.
+                    # prev_row: |----------------|
+                    # row:      |----------------|
                     prev_row = row
+                elif relation == Allen.X_DURING_Y_INVERSE:
+                    # row during prev_row. Should not occur with proper reference data.
+                    # prev_row: |----------------|
+                    # row:           |------|
+                    if not self._equal(prev_row, row):
+                        prev_row[self._key_end_date] = row[self._key_start_date] - 1
+                        ret.append(prev_row)
+                        prev_row = row
+                        # Note: the interval after row[self._key_end_date] is discarded.
+
+                    # Note: if the two rows are identical (except for start and end date) nothing to do.
+                elif relation == Allen.X_FINISHES_Y_INVERSE:
+                    # row finishes prev_row. Should not occur with proper reference data.
+                    # prev_row: |----------------|
+                    # row:                |------|
+                    if not self._equal(prev_row, row):
+                        prev_row[self._key_end_date] = row[self._key_start_date] - 1
+                        ret.append(prev_row)
+                        prev_row = row
+
+                    # Note: if the two rows are identical (except for start and end date) nothing to do.
                 else:
-                    raise ValueError('Data is not sorted properly')
+                    # Not in _pass3 the rows are sorted such that.
+                    # prev_row[self._key_begin_date] <= row[self._key_begin_date]. Hence the following relation should
+                    # not occur: X_FINISHES_Y, X_BEFORE_Y_INVERSE, X_MEETS_Y_INVERSE, X_OVERLAPS_WITH_Y_INVERSE, and
+                    # X_STARTS_Y_INVERSE. Hence, we covered all 13 relations in Allen's interval algebra.
+                    raise ValueError('Data is not sorted properly. Relation: %d' % relation)
             else:
                 prev_row = row
 
