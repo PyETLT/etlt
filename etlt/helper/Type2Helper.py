@@ -190,6 +190,8 @@ class Type2Helper:
         """
         ret = []
         for _, rows in self.rows.items():
+            if self._date_type:
+                self._rows_int2date(rows)
             ret.extend(rows)
 
         return ret
