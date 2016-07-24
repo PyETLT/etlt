@@ -30,7 +30,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -55,7 +56,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -83,7 +85,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -115,7 +118,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -143,7 +147,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -175,7 +180,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -211,7 +217,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -242,7 +249,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -270,7 +278,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -302,7 +311,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -333,7 +343,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -368,7 +379,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -399,7 +411,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -427,7 +440,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -459,7 +473,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -487,7 +502,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -513,7 +529,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -543,7 +560,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -584,7 +602,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
@@ -641,7 +660,8 @@ class Type2CondenseHelperTest(unittest.TestCase):
 
         helper = Type2CondenseHelper('start', 'end', ['year'])
         helper.prepare_data(rows)
-        actual = helper.condense()
+        helper.condense()
+        actual = helper.get_rows()
         self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)

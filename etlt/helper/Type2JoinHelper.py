@@ -5,8 +5,6 @@ Copyright 2016 Set Based IT Consultancy
 
 Licence MIT
 """
-import copy
-
 from etlt.helper.Allen import Allen
 from etlt.helper.Type2Helper import Type2Helper
 
@@ -55,38 +53,24 @@ class Type2JoinHelper(Type2Helper):
         return start, end
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _pass1(self, keys, rows):
+    def _additional_rows_date2int(self, keys, rows):
         """
-        Replaces start and end dates in the row set with their integer representation
+        Replaces start and end dates of the additional date intervals in the row set with their integer representation
 
         :param list[tuple[str,str]] keys: The other keys with start and end date.
         :param list[dict[str,T]] rows: The list of rows.
 
         :rtype: list[dict[str,T]]
         """
-        ret = list()
         for row in rows:
-            # Make a copy of the row such that self._rows is not affected by merge.
-            tmp = copy.copy(row)
-
-            # Determine the type of dates based on the first start date.
-            if not self._date_type:
-                self._date_type = self._get_date_type(tmp[self._key_start_date])
-
-            # Convert dates to integers.
-            tmp[self._key_start_date] = self._date2int(tmp[self._key_start_date])
-            tmp[self._key_end_date] = self._date2int(tmp[self._key_end_date])
             for key_start_date, key_end_date in keys:
-                if key_start_date != self._key_start_date:
-                    tmp[key_start_date] = self._date2int(tmp[key_start_date])
-                if key_end_date != self._key_end_date:
-                    tmp[key_end_date] = self._date2int(tmp[key_end_date])
-            ret.append(tmp)
-
-        return ret
+                if key_start_date not in [self._key_start_date, self._key_end_date]:
+                    row[key_start_date] = self._date2int(row[key_start_date])
+                if key_end_date not in [self._key_start_date, self._key_end_date]:
+                    row[key_end_date] = self._date2int(row[key_end_date])
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _pass2(self, keys, rows):
+    def _intersection(self, keys, rows):
         """
         Computes the intersection of the date intervals of two or more reference data sets. If the intersection is empty
         the row is removed from the group.
@@ -107,9 +91,9 @@ class Type2JoinHelper(Type2Helper):
                                                                   row[key_end_date])
                 if not start_date:
                     break
-                if self._key_start_date != key_start_date:
+                if key_start_date not in [self._key_start_date, self._key_end_date]:
                     del row[key_start_date]
-                if self._key_end_date != key_end_date:
+                if key_end_date not in [self._key_start_date, self._key_end_date]:
                     del row[key_end_date]
 
             if start_date:
@@ -120,14 +104,14 @@ class Type2JoinHelper(Type2Helper):
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _pass4(self, rows):
+    def _merge_adjacent_rows(self, rows):
         """
-        Merges adjacent and overlapping rows in the same group (i.e. with the same natural key). With proper reference
-        data overlapping rows MUST not occur. However, this  method can handle overlapping rows. Overlapping rows are
-        resolved as follows:
+        Resolves adjacent and overlapping rows. With proper reference data overlapping rows MUST not occur. However,
+        this  method can handle overlapping rows. Overlapping rows are resolved as follows:
         * The interval with the most recent begin date prevails for the overlapping period.
         * If the begin dates are the same the interval with the most recent end date prevails.
         * If the begin and end dates are equal the last row in the data set prevails.
+        Identical (excluding begin and end date) adjacent rows are replace with a single row.
 
         :param list[dict[str,T]] rows: The rows in a group (i.e. with the same natural key).
         .
@@ -148,6 +132,7 @@ class Type2JoinHelper(Type2Helper):
                     # row:                 |-----|
                     ret.append(prev_row)
                     prev_row = row
+
                 elif relation == Allen.X_MEETS_Y:
                     # The two rows are adjacent.
                     # prev_row: |-------|
@@ -160,6 +145,7 @@ class Type2JoinHelper(Type2Helper):
                         # Rows are adjacent but not identical.
                         ret.append(prev_row)
                         prev_row = row
+
                 elif relation == Allen.X_OVERLAPS_WITH_Y:
                     # prev_row overlaps row. Should not occur with proper reference data.
                     # prev_row: |-----------|
@@ -173,16 +159,19 @@ class Type2JoinHelper(Type2Helper):
                         prev_row[self._key_end_date] = row[self._key_start_date] - 1
                         ret.append(prev_row)
                         prev_row = row
+
                 elif relation == Allen.X_STARTS_Y:
                     # prev_row start row. Should not occur with proper reference data.
                     # prev_row: |------|
                     # row:      |----------------|
                     prev_row = row
+
                 elif relation == Allen.X_EQUAL_Y:
                     # Can happen when the reference data sets are joined without respect for date intervals.
                     # prev_row: |----------------|
                     # row:      |----------------|
                     prev_row = row
+
                 elif relation == Allen.X_DURING_Y_INVERSE:
                     # row during prev_row. Should not occur with proper reference data.
                     # prev_row: |----------------|
@@ -195,6 +184,7 @@ class Type2JoinHelper(Type2Helper):
                         prev_row[self._key_end_date] = row[self._key_start_date] - 1
                         ret.append(prev_row)
                         prev_row = row
+
                 elif relation == Allen.X_FINISHES_Y_INVERSE:
                     # row finishes prev_row. Should not occur with proper reference data.
                     # prev_row: |----------------|
@@ -206,11 +196,10 @@ class Type2JoinHelper(Type2Helper):
 
                     # Note: if the two rows are identical (except for start and end date) nothing to do.
                 else:
-                    # Not in _pass3 the rows are sorted such that.
-                    # prev_row[self._key_begin_date] <= row[self._key_begin_date]. Hence the following relation should
-                    # not occur: X_DURING_Y,  X_FINISHES_Y, X_BEFORE_Y_INVERSE, X_MEETS_Y_INVERSE,
-                    # X_OVERLAPS_WITH_Y_INVERSE, and X_STARTS_Y_INVERSE. Hence, we covered all 13 relations in Allen's
-                    # interval algebra.
+                    # Note: The rows are sorted such that prev_row[self._key_begin_date] <= row[self._key_begin_date].
+                    # Hence the following relation should not occur: X_DURING_Y,  X_FINISHES_Y, X_BEFORE_Y_INVERSE,
+                    # X_MEETS_Y_INVERSE, X_OVERLAPS_WITH_Y_INVERSE, and X_STARTS_Y_INVERSE. Hence, we covered all 13
+                    # relations in Allen's interval algebra.
                     raise ValueError('Data is not sorted properly. Relation: %d' % relation)
             else:
                 prev_row = row
@@ -226,21 +215,18 @@ class Type2JoinHelper(Type2Helper):
         Merges the join on natural keys of two or more reference data sets.
 
         :param list[tuple[str,str]] keys: For each data set the keys of the start and end date.
-
-        :rtype: list[dict[str,T]]
         """
-        ret = list()
-        self._date_type = ''
-        for rows in self.rows.values():
-            tmp = self._pass1(keys, rows)
-            tmp = self._pass2(keys, tmp)
-            if tmp:
-                tmp = self._rows_sort(tmp)
-                tmp = self._pass4(tmp)
-                self._rows_int2date(tmp)
+        deletes = []
+        for natural_key, rows in self.rows.items():
+            self._additional_rows_date2int(keys, rows)
+            rows = self._intersection(keys, rows)
+            if rows:
+                rows = self._rows_sort(rows)
+                self.rows[natural_key] = self._merge_adjacent_rows(rows)
+            else:
+                deletes.append(natural_key)
 
-            ret.extend(tmp)
-
-        return ret
+        for natural_key in deletes:
+            del self.rows[natural_key]
 
 # ----------------------------------------------------------------------------------------------------------------------

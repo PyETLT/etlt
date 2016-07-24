@@ -50,11 +50,19 @@ class Type2Helper:
         :type dict:
         """
 
+        self._copy = True
+        """
+        If set to true a copy will be made from the original rows such that the original rows is not modified.
+
+         :type bool:
+        """
+
         self._date_type = ''
         """
         The type of the date fields.
         - date for datetime.date objects
-        - str  for strings in ISO 8601 (YYYY-MM-DD) format.
+        - str  for strings in ISO 8601 (YYYY-MM-DD) format
+        - int for integers
 
         :type str:
         """
@@ -107,17 +115,14 @@ class Type2Helper:
         """
         ret = list()
         for row in rows:
-            # Make a copy of the row such that self._rows is not affected by merge.
-            tmp = copy.copy(row)
-
             # Determine the type of dates based on the first start date.
             if not self._date_type:
-                self._date_type = self._get_date_type(tmp[self._key_start_date])
+                self._date_type = self._get_date_type(row[self._key_start_date])
 
             # Convert dates to integers.
-            tmp[self._key_start_date] = self._date2int(tmp[self._key_start_date])
-            tmp[self._key_end_date] = self._date2int(tmp[self._key_end_date])
-            ret.append(tmp)
+            row[self._key_start_date] = self._date2int(row[self._key_start_date])
+            row[self._key_end_date] = self._date2int(row[self._key_end_date])
+            ret.append(row)
 
         return ret
 
@@ -135,6 +140,9 @@ class Type2Helper:
             elif self._date_type == 'date':
                 row[self._key_start_date] = datetime.date.fromordinal(row[self._key_start_date])
                 row[self._key_end_date] = datetime.date.fromordinal(row[self._key_end_date])
+            elif self._date_type == 'int':
+                # Nothing to do.
+                pass
             else:
                 raise ValueError('Unexpected date type {0!s}'.format(self._date_type))
 
@@ -165,6 +173,9 @@ class Type2Helper:
         if isinstance(date, datetime.date):
             return 'date'
 
+        if isinstance(date, int):
+            return 'int'
+
         raise ValueError('Unexpected type {0!s}'.format(date.__class__))
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -184,14 +195,15 @@ class Type2Helper:
             self.rows[natural_key] = rows
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_rows(self):
+    def get_rows(self, sort=False):
         """
         Returns the rows of this Type2Helper.
+
+        :param bool sort: If True the rows are sorted by the natural key.
         """
         ret = []
-        for _, rows in self.rows.items():
-            if self._date_type:
-                self._rows_int2date(rows)
+        for _, rows in sorted(self.rows.items()) if sort else self.rows.items():
+            self._rows_int2date(rows)
             ret.extend(rows)
 
         return ret
@@ -205,10 +217,15 @@ class Type2Helper:
         :param list[dict] rows: The rows
         """
         self.rows = dict()
-        for row in rows:
+        for row in copy.copy(rows) if self._copy else rows:
             natural_key = self._get_natural_key(row)
             if natural_key not in self.rows:
                 self.rows[natural_key] = list()
             self.rows[natural_key].append(row)
+
+        # Convert begin and end dates to integers.
+        self._date_type = None
+        for natural_key, rows in self.rows.items():
+            self.rows[natural_key] = self._rows_date2int(rows)
 
 # ----------------------------------------------------------------------------------------------------------------------

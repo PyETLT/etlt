@@ -20,9 +20,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge01(self):
@@ -41,9 +42,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, [])
+        self.assertListEqual([], actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge02(self):
@@ -62,9 +64,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, [])
+        self.assertListEqual([], actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge03(self):
@@ -90,9 +93,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge04(self):
@@ -118,9 +122,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge05(self):
@@ -146,9 +151,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge06(self):
@@ -174,9 +180,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge07(self):
@@ -202,9 +209,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge08(self):
@@ -223,9 +231,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, [])
+        self.assertListEqual([], actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge09(self):
@@ -244,9 +253,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, [])
+        self.assertListEqual([], actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge10(self):
@@ -265,9 +275,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, [])
+        self.assertListEqual([], actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge11(self):
@@ -293,9 +304,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge12(self):
@@ -321,9 +333,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge13(self):
@@ -349,9 +362,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge21a(self):
@@ -376,9 +390,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(expected, rows)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge21b(self):
@@ -403,9 +418,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(expected, rows)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge22a(self):
@@ -435,9 +451,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(expected, rows)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge22b(self):
@@ -462,9 +479,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(expected, rows)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge23a(self):
@@ -494,9 +512,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge23b(self):
@@ -532,9 +551,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge24a(self):
@@ -564,9 +584,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge24b(self):
@@ -596,9 +617,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge25a(self):
@@ -628,9 +650,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge26a(self):
@@ -660,9 +683,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge26b(self):
@@ -698,9 +722,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge27a(self):
@@ -730,9 +755,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge27b(self):
@@ -769,9 +795,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start', 'end', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([])
+        helper.merge([])
+        actual = helper.get_rows()
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test_merge99(self):
@@ -855,9 +882,10 @@ class Type2JoinHelperTest(unittest.TestCase):
 
         helper = Type2JoinHelper('start1', 'end1', ['a', 'b', 'c'])
         helper.prepare_data(rows)
-        rows = helper.merge([('start2', 'end2')])
-        rows = sorted(rows, key=lambda row: (row['a'], row['b'], row['c'], row['start1']))
+        helper.merge([('start2', 'end2')])
+        actual = helper.get_rows()
+        actual = sorted(actual, key=lambda row: (row['a'], row['b'], row['c'], row['start1']))
 
-        self.assertListEqual(rows, expected)
+        self.assertListEqual(expected, actual)
 
 # ----------------------------------------------------------------------------------------------------------------------

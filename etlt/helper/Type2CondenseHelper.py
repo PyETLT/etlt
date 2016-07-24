@@ -18,57 +18,88 @@ class Type2CondenseHelper(Type2Helper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _distinct(start1, end1, start2, end2):
+    def _distinct(row1, row2):
         """
         Returns a list of distinct (or none overlapping) intervals if two intervals are not distinct. Returns None if
         the two intervals are distinct. The list can have 2 or 3 intervals.
 
-        :param int start1: The start date of the first interval.
-        :param int end1: The end date of the first interval.
-        :param int start2: The start date of the second interval.
-        :param int end2: The end date of the second interval.
+        :param tuple[int,int] row1: The first interval.
+        :param tuple[int,int] row2: The second interval.
 
-        :rtype: None|tuple[datetime.date|None,datetime.date|None]
+        :rtype: None|tuple[int,int]
         """
-        relation = Allen.relation(start1, end1, start2, end2)
-        if relation in [Allen.X_BEFORE_Y, Allen.X_MEETS_Y]:
-            return None  # [(start1, end1), (start2, end2)]
+        relation = Allen.relation(row1[0], row1[1], row2[0], row2[1])
+        if relation == Allen.X_BEFORE_Y:
+            # row1: |----|
+            # row2:            |-----|
+            return None  # [(row1[0], row1[1]), (row2[0], row2[1])]
 
-        if relation in [Allen.X_BEFORE_Y_INVERSE, Allen.X_MEETS_Y_INVERSE]:
-            return None  # [(start2, end2), (start1, end1)]
+        if relation == Allen.X_BEFORE_Y_INVERSE:
+            # row1:            |-----|
+            # row2: |----|
+            return None  # [(row2[0], row2[1]), (row1[0], row1[1])]
+
+        if relation == Allen.X_MEETS_Y:
+            # row1: |-------|
+            # row2:          |-------|
+            return None  # [(row1[0], row1[1]), (row2[0], row2[1])]
+
+        if relation == Allen.X_MEETS_Y_INVERSE:
+            # row1:          |-------|
+            # row2: |-------|
+            return None  # [(row2[0], row2[1]), (row1[0], row1[1])]
 
         if relation == Allen.X_OVERLAPS_WITH_Y:
-            return [(start1, start2 - 1), (start2, end1), (end1 + 1, end2)]
+            # row1: |-----------|
+            # row2:       |----------|
+            return [(row1[0], row2[0] - 1), (row2[0], row1[1]), (row1[1] + 1, row2[1])]
 
         if relation == Allen.X_OVERLAPS_WITH_Y_INVERSE:
-            return [(start2, start1 - 1), (start1, end2), (end2 + 1, end1)]
+            # row1:       |----------|
+            # row2: |-----------|
+            return [(row2[0], row1[0] - 1), (row1[0], row2[1]), (row2[1] + 1, row1[1])]
 
         if relation == Allen.X_STARTS_Y:
-            return [(start1, end1), (end1 + 1, end2)]
+            # row1: |------|
+            # row2: |----------------|
+            return [(row1[0], row1[1]), (row1[1] + 1, row2[1])]
 
         if relation == Allen.X_STARTS_Y_INVERSE:
-            return [(start2, end2), (end2 + 1, end1)]
+            # row1: |----------------|
+            # row2: |------|
+            return [(row2[0], row2[1]), (row2[1] + 1, row1[1])]
 
         if relation == Allen.X_DURING_Y:
-            return [(start2, start1 - 1), (start1, end1), (end1 + 1, end2)]
+            # row1:      |------|
+            # row2: |----------------|
+            return [(row2[0], row1[0] - 1), (row1[0], row1[1]), (row1[1] + 1, row2[1])]
 
         if relation == Allen.X_DURING_Y_INVERSE:
-            return [(start1, start2 - 1), (start2, end2), (end2 + 1, end1)]
+            # row1: |----------------|
+            # row2:      |------|
+            return [(row1[0], row2[0] - 1), (row2[0], row2[1]), (row2[1] + 1, row1[1])]
 
         if relation == Allen.X_FINISHES_Y:
-            return [(start2, start1 - 1), (start1, end1)]
+            # row1:           |------|
+            # row2: |----------------|
+            return [(row2[0], row1[0] - 1), (row1[0], row1[1])]
 
         if relation == Allen.X_FINISHES_Y_INVERSE:
-            return [(start1, start2 - 1), (start2, end2)]
+            # row1: |----------------|
+            # row2:           |------|
+            return [(row1[0], row2[0] - 1), (row2[0], row2[1])]
 
         if relation == Allen.X_EQUAL_Y:
-            return None  # [(start1, end1)]
+            # row1: |----------------|
+            # row2: |----------------|
+            return None  # [(row1[0], row1[1])]
 
+        # We got all 13 relation in Allen's interval algebra covered.
         raise ValueError('Unexpected relation {0:d}'.format(relation))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _add(all_intervals, new_interval):
+    def _add_interval(all_intervals, new_interval):
         """
         Adds a new interval to a set of distinct intervals.
 
@@ -78,10 +109,7 @@ class Type2CondenseHelper(Type2Helper):
         intervals = None
         old_interval = None
         for old_interval in all_intervals:
-            intervals = Type2CondenseHelper._distinct(new_interval[0],
-                                                      new_interval[1],
-                                                      old_interval[0],
-                                                      old_interval[1])
+            intervals = Type2CondenseHelper._distinct(new_interval, old_interval)
             if intervals:
                 break
 
@@ -89,7 +117,7 @@ class Type2CondenseHelper(Type2Helper):
             if old_interval:
                 all_intervals.remove(old_interval)
             for distinct_interval in intervals:
-                Type2CondenseHelper._add(all_intervals, distinct_interval)
+                Type2CondenseHelper._add_interval(all_intervals, distinct_interval)
         else:
             all_intervals.add(new_interval)
 
@@ -104,31 +132,24 @@ class Type2CondenseHelper(Type2Helper):
         """
         ret = set()
         for row in rows:
-            self._add(ret, (row[self._key_start_date], row[self._key_end_date]))
+            self._add_interval(ret, (row[self._key_start_date], row[self._key_end_date]))
 
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
     def condense(self):
         """
-        Returns the data set condensed to the distinct intervals based on the natural key.
-
-        :rtype: list[dict[str,T]]
+        Condense the data set to the distinct intervals based on the natural key.
         """
-        ret = list()
-        self._date_type = ''
-        for rows in self.rows.values():
-            tmp1 = self._rows_date2int(rows)
-            tmp2 = self._derive_distinct_intervals(tmp1)
-            tmp2 = sorted(tmp2)
-            for tmp3 in tmp2:
-                tmp4 = copy.copy(rows[0])
-                tmp4[self._key_start_date] = tmp3[0]
-                tmp4[self._key_end_date] = tmp3[1]
-                ret.append(tmp4)
+        for natural_key, rows in self.rows.items():
+            tmp1 = []
+            intervals = sorted(self._derive_distinct_intervals(rows))
+            for interval in intervals:
+                tmp2 = copy.copy(rows[0])
+                tmp2[self._key_start_date] = interval[0]
+                tmp2[self._key_end_date] = interval[1]
+                tmp1.append(tmp2)
 
-        self._rows_int2date(ret)
-
-        return ret
+            self.rows[natural_key] = tmp1
 
 # ----------------------------------------------------------------------------------------------------------------------
