@@ -200,7 +200,7 @@ class Type2JoinHelper(Type2Helper):
                     # Hence the following relation should not occur: X_DURING_Y,  X_FINISHES_Y, X_BEFORE_Y_INVERSE,
                     # X_MEETS_Y_INVERSE, X_OVERLAPS_WITH_Y_INVERSE, and X_STARTS_Y_INVERSE. Hence, we covered all 13
                     # relations in Allen's interval algebra.
-                    raise ValueError('Data is not sorted properly. Relation: %d' % relation)
+                    raise ValueError('Data is not sorted properly. Relation: {0:d}'.format(relation))
             else:
                 prev_row = row
 
