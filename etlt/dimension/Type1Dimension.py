@@ -23,7 +23,7 @@ class Type1Dimension:
         """
         The map from natural keys to a technical keys.
 
-        :type dict[T, int|None]:
+        :type: dict[T, int|None]
         """
 
         # Pre-load look up data in to the map.

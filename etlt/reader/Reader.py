@@ -23,7 +23,7 @@ class Reader:
         """
         The fields (or columns) that this reader will read from the source.
 
-        :type list[str]:
+        :type: list[str]
         """
 
         self._row_number = -1

@@ -24,7 +24,7 @@ class Writer:
         """
         The fields (or columns) that must be written to the destination.
 
-        :type list[str]:
+        :type: list[str]
         """
 
     # ------------------------------------------------------------------------------------------------------------------

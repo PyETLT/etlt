@@ -20,7 +20,7 @@ class DateCleaner:
         Converts a date in miscellaneous format to ISO-8601 (YYYY-MM-DD) format.
 
         :param str date: The input date.
-        :rtype str:
+        :rtype: str
         """
         # Return empty input immediately.
         if not date:

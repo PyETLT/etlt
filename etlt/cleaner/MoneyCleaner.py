@@ -21,7 +21,7 @@ class MoneyCleaner:
 
         :param str amount: The input number.
 
-        :rtype str:
+        :rtype: str
         """
         # Return empty input immediately.
         if not amount:

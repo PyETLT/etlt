@@ -24,14 +24,14 @@ class SimpleCondition(Condition):
         """
         The name of the field in the row that must be match against the glob.
 
-        :type str:
+        :type: str
         """
 
         self._expression = expression
         """
         The expression.
 
-        :type str:
+        :type: str
         """
 
 # ----------------------------------------------------------------------------------------------------------------------

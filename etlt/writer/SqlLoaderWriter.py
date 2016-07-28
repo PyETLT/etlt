@@ -18,7 +18,7 @@ class SqlLoaderWriter(Writer):
     """
     The handlers for writing objects as a field to a CSV file.
 
-    :type dict[str,callable]:
+    :type: dict[str,callable]
     """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -35,21 +35,21 @@ class SqlLoaderWriter(Writer):
         """
         The name of the destination file.
 
-        :type str:
+        :type: str
         """
 
         self._encoding = encoding
         """
         The encoding of the text in the destination file.
 
-        :type str:
+        :type: str
         """
 
         self._file = None
         """
         The underling file object.
 
-        :type T:
+        :type: T
         """
 
     # ------------------------------------------------------------------------------------------------------------------

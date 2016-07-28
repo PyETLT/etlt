@@ -126,14 +126,14 @@ class Transformer:
         """
         The mandatory fields (or columns) in the output row.
 
-         :type list[str]:
+         :type: list[str]
         """
 
         self._steps = []
         """
         All _step<n> methods where n is an integer in this class sorted by n.
 
-        :type list[str]:
+        :type: list[str]
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ class Transformer:
 
         :param str message: The log message.
 
-        :rtype None:
+        :rtype: None
         """
         #  @todo Replace with log package.
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' ' + str(message), flush=True)
@@ -254,7 +254,7 @@ class Transformer:
         :param dict[str,str] in_row: The input row.
         :param dict[str,T] out_row: The output row.
 
-        :rtype (str,str):
+        :rtype: (str,str)
         """
         tmp_row = {}
 

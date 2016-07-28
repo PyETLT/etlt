@@ -27,34 +27,34 @@ class Type2Helper:
         """
         The keys of the columns that form the natural key.
 
-        :type list[str]:
+        :type: list[str]
         """
 
         self._key_end_date = key_end_date
         """
         The key of the end date in the rows.
 
-        :type str:
+        :type: str
         """
         self._key_start_date = key_start_date
         """
         The key of the start date in the rows.
 
-        :type str:
+        :type: str
         """
 
         self.rows = dict()
         """
         The data set.
 
-        :type dict:
+        :type: dict
         """
 
         self._copy = True
         """
         If set to true a copy will be made from the original rows such that the original rows is not modified.
 
-         :type bool:
+         :type: bool
         """
 
         self._date_type = ''
@@ -64,7 +64,7 @@ class Type2Helper:
         - str  for strings in ISO 8601 (YYYY-MM-DD) format
         - int for integers
 
-        :type str:
+        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -184,7 +184,7 @@ class Type2Helper:
         Enumerates all rows such that the natural key and the ordinal number are a unique key.
 
         :param str name: The key holding the ordinal number.
-        :param start: The start of the ordinal numbers. Foreach natural key the first row has this ordinal number.
+        :param int start: The start of the ordinal numbers. Foreach natural key the first row has this ordinal number.
         """
         for natural_key, rows in self.rows.items():
             rows = self._rows_sort(rows)

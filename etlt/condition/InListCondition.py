@@ -25,14 +25,14 @@ class InListCondition(Condition):
         """
         The name of the field in the row that must be match against the list of values.
 
-        :type str:
+        :type: str
         """
 
         self._values = values
         """
         The list of values.
 
-        :type list[str]:
+        :type: list[str]
         """
 
     # ------------------------------------------------------------------------------------------------------------------

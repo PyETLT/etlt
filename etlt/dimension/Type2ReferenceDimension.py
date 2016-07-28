@@ -46,7 +46,7 @@ class Type2ReferenceDimension:
         The map from natural keys to lists of tuples with start date, end date, and technical keys. The dates must be in
         ISO 8601 (YYYY-MM-DD) format.
 
-        :type dict[T, (str,str,int|None)]:
+        :type: dict[T, (str,str,int|None)]
         """
 
         # Pre-load look up data in to the map.

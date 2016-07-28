@@ -20,7 +20,7 @@ class WhitespaceCleaner:
 
         :param str string: The string.
 
-        :rtype str:
+        :rtype: str
         """
         # Return empty input immediately.
         if not string:

@@ -21,7 +21,7 @@ class CompoundCondition(Condition):
         """
         The list of conditions of this compound condition.
 
-        :type list[gdwh.map.Condition.Condition]:
+        :type: list[gdwh.map.Condition.Condition]
         """
 
     # ------------------------------------------------------------------------------------------------------------------
