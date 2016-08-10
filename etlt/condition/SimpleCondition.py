@@ -5,12 +5,10 @@ Copyright 2016 Set Based IT Consultancy
 
 Licence MIT
 """
-import abc
-
 from etlt.condition.Condition import Condition
 
 
-class SimpleCondition(Condition, metaclass=abc.ABCMeta):
+class SimpleCondition(Condition):
     """
     A simple condition matches a single field in the row against an expression.
     """
