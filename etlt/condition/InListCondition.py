@@ -5,21 +5,22 @@ Copyright 2016 Set Based IT Consultancy
 
 Licence MIT
 """
+from etlt.condition.SimpleConditionFactory import SimpleConditionFactory
+
 from etlt.condition.Condition import Condition
 
 
 class InListCondition(Condition):
     """
-    A list condition matches a single field against a list of values.
+    A list condition matches a single field against a list of conditions.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, field, values):
+    def __init__(self, field):
         """
         Object contructor.
 
         :param str field: The name of the field in the row that must be match against the expression.
-        :param list[str] values: The list of values.
         """
         self._field = field
         """
@@ -28,11 +29,18 @@ class InListCondition(Condition):
         :type: str
         """
 
-        self._values = values
+        self._values = list()
         """
-        The list of values.
+        The list of values of plain conditions.
 
         :type: list[str]
+        """
+
+        self._conditions = list()
+        """
+        The list of other conditions.
+
+        :type: list[etlt.condition.SimpleCondition.SimpleCondition]
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -65,17 +73,28 @@ class InListCondition(Condition):
         """
         self._values.clear()
         for row in rows:
-            self._values.append(row[field])
+            condition = SimpleConditionFactory.create_condition(self._field, row[field])
+            if condition.scheme == 'plain':
+                self._values.append(condition.expression)
+            else:
+                self._conditions.append(condition)
 
     # ------------------------------------------------------------------------------------------------------------------
     def match(self, row):
         """
-        Returns True if the field is in the list of values. Returns False otherwise.
+        Returns True if the field is in the list of conditions. Returns False otherwise.
 
         :param dict row: The row.
 
         :rtype: bool
         """
-        return row[self._field] in self._values
+        if row[self._field] in self._values:
+            return True
+
+        for condition in self._conditions:
+            if condition.match(row):
+                return True
+
+        return False
 
 # ----------------------------------------------------------------------------------------------------------------------

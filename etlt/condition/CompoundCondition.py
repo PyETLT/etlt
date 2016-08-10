@@ -12,6 +12,7 @@ class CompoundCondition(Condition):
     """
     Abstract parent class for conditions with one or more child conditions.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         """

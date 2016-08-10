@@ -26,4 +26,14 @@ class GlobCondition(SimpleCondition):
         """
         return fnmatch.fnmatchcase(row[self._field], self._expression)
 
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def scheme(self):
+        """
+        Returns 'glob'.
+
+        :rtype: str
+        """
+        return 'glob'
+
 # ----------------------------------------------------------------------------------------------------------------------

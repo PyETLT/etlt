@@ -7,6 +7,7 @@ Licence MIT
 """
 import re
 
+from etlt.condition.FalseCondition import FalseCondition
 from etlt.condition.GlobCondition import GlobCondition
 from etlt.condition.PlainCondition import PlainCondition
 from etlt.condition.RegularExpressionCondition import RegularExpressionCondition
@@ -23,6 +24,7 @@ class SimpleConditionFactory:
 
     dict[str, callable]
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def _split_scheme(expression):
@@ -70,15 +72,17 @@ class SimpleConditionFactory:
 
         :rtype: gdwh.map.SimpleCondition.SimpleCondition
         """
-        scheme, actual = SimpleConditionFactory._split_scheme(expression)
+        scheme, expression = SimpleConditionFactory._split_scheme(expression)
 
         if scheme not in SimpleConditionFactory._constructors:
             raise ValueError('Scheme {0!s} is not registered'.format(scheme))
 
-        return SimpleConditionFactory._constructors[scheme](field, actual)
+        return SimpleConditionFactory._constructors[scheme](field, expression)
+
 
 # ----------------------------------------------------------------------------------------------------------------------
-SimpleConditionFactory.register_scheme('glob', GlobCondition.__init__)
-SimpleConditionFactory.register_scheme('plain', PlainCondition.__init__)
-SimpleConditionFactory.register_scheme('re', RegularExpressionCondition.__init__)
-SimpleConditionFactory.register_scheme('true', TrueCondition.__init__)
+SimpleConditionFactory.register_scheme('false', FalseCondition)
+SimpleConditionFactory.register_scheme('glob', GlobCondition)
+SimpleConditionFactory.register_scheme('plain', PlainCondition)
+SimpleConditionFactory.register_scheme('re', RegularExpressionCondition)
+SimpleConditionFactory.register_scheme('true', TrueCondition)

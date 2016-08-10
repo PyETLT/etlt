@@ -5,6 +5,8 @@ Copyright 2016 Set Based IT Consultancy
 
 Licence MIT
 """
+import abc
+
 from etlt.condition.Condition import Condition
 
 
@@ -12,6 +14,7 @@ class SimpleCondition(Condition):
     """
     A simple condition matches a single field in the row against an expression.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self, field, expression):
         """
@@ -22,7 +25,7 @@ class SimpleCondition(Condition):
         """
         self._field = field
         """
-        The name of the field in the row that must be match against the glob.
+        The name of the field in the row that must be match against the expression.
 
         :type: str
         """
@@ -33,5 +36,35 @@ class SimpleCondition(Condition):
 
         :type: str
         """
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def expression(self):
+        """
+        Returns the expression.
+
+        :rtype: str
+        """
+        return self._expression
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @property
+    def field(self):
+        """
+        Returns the name of the field in the row that must be match against the expression.
+
+        :rtype: str
+        """
+        return self._field
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractproperty
+    def scheme(self):
+        """
+        Returns the scheme of the simple condition.
+
+        :rtype: str
+        """
+        raise NotImplementedError()
 
 # ----------------------------------------------------------------------------------------------------------------------
