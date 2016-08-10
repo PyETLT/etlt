@@ -100,7 +100,7 @@ class RegularDimension(metaclass=abc.ABCMeta):
         In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy and
         to commit or rollback the transaction.
 
-        :param bool success: If True the stored procedure is executed successfully. If an exception has occurred.
+        :param bool success: True: the stored procedure is executed successfully. False: an exception has occurred.
 
         :rtype: None
         """
