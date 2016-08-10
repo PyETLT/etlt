@@ -9,7 +9,7 @@ import abc
 import copy
 
 
-class Writer:
+class Writer(metaclass=abc.ABCMeta):
     """
     Abstract parent class for writing rows to a destination.
     """

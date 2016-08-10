@@ -14,7 +14,7 @@ import traceback
 from etlt.cleaner.WhitespaceCleaner import WhitespaceCleaner
 
 
-class Transformer:
+class Transformer(metaclass=abc.ABCMeta):
     """
     Abstract parent class for transforming source data in (partial) dimensional data.
     """

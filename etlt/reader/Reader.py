@@ -9,7 +9,7 @@ import abc
 import copy
 
 
-class Reader:
+class Reader(metaclass=abc.ABCMeta):
     """
     Abstract parent class for reading (directly or indirectly) rows from the source.
     """

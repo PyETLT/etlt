@@ -8,9 +8,9 @@ Licence MIT
 import abc
 
 
-class Type1Dimension:
+class RegularDimension(metaclass=abc.ABCMeta):
     """
-    Abstract parent class for translating natural key to a technical key of a type 1 dimension.
+    Abstract parent class for translating natural key to a technical key of a regular dimension.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -45,11 +45,13 @@ class Type1Dimension:
 
         # The natural key is not in the map of this dimension. Call a stored procedure for translating the natural key
         # to a technical key.
-        self.acquire_lock()
+        self.pre_call_stored_procedure()
+        success = False
         try:
             key = self.call_stored_procedure(natural_key, enhancement)
+            success = True
         finally:
-            self.release_lock()
+            self.post_call_stored_procedure(success)
 
         # Add the translation for natural key to technical ID to the map.
         self._map[natural_key] = key
@@ -60,7 +62,7 @@ class Type1Dimension:
     @abc.abstractmethod
     def call_stored_procedure(self, natural_key, enhancement):
         """
-        Call a stored procedure for getting the technical key for a natural key. Returns the technical ID or None if
+        Calls a stored procedure for getting the technical key of a natural key. Returns the technical ID or None if
         the given natural key is not valid.
 
         :param T natural_key: The natural key.
@@ -80,8 +82,10 @@ class Type1Dimension:
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def acquire_lock(self):
+    def pre_call_stored_procedure(self):
         """
+        This method is invoked before call the stored procedure for getting the technical key of a natural key.
+
         In a concurrent environment override this method to acquire a lock on the dimension or dimension hierarchy.
 
         :rtype: None
@@ -89,9 +93,14 @@ class Type1Dimension:
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def release_lock(self):
+    def post_call_stored_procedure(self, success):
         """
-        In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy.
+        This method is invoked after calling the stored procedure for getting the technical key of a natural key.
+
+        In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy and
+        to commit or rollback the transaction.
+
+        :param bool success: If True the stored procedure is executed successfully. If an exception has occurred.
 
         :rtype: None
         """

@@ -8,7 +8,7 @@ Licence MIT
 import abc
 
 
-class Condition:
+class Condition(metaclass=abc.ABCMeta):
     """
     An abstract parent class for conditions.
     """

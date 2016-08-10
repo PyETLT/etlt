@@ -5,10 +5,12 @@ Copyright 2016 Set Based IT Consultancy
 
 Licence MIT
 """
+import abc
+
 from etlt.condition.Condition import Condition
 
 
-class CompoundCondition(Condition):
+class CompoundCondition(Condition, metaclass=abc.ABCMeta):
     """
     Abstract parent class for conditions with one or more child conditions.
     """

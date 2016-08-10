@@ -9,7 +9,7 @@ import abc
 import datetime
 
 
-class Type2ReferenceDimension:
+class Type2ReferenceDimension(metaclass=abc.ABCMeta):
     """
     Abstract class for type2 dimensions for which the reference data is supplied with date intervals.
     """
@@ -46,7 +46,7 @@ class Type2ReferenceDimension:
         The map from natural keys to lists of tuples with start date, end date, and technical keys. The dates must be in
         ISO 8601 (YYYY-MM-DD) format.
 
-        :type: dict[T, (str,str,int|None)]
+        :type: dict[T, list[(str,str,int|None)]]
         """
 
         # Pre-load look up data in to the map.
@@ -74,7 +74,8 @@ class Type2ReferenceDimension:
 
         # The natural key is not in the map of this dimension. Call a stored procedure for translating the natural key
         # to a technical key.
-        self.acquire_lock()
+        self.pre_call_stored_procedure()
+        success = False
         try:
             row = self.call_stored_procedure(natural_key, date, enhancement)
             # Convert dates to strings in ISO 8601 format.
@@ -82,8 +83,9 @@ class Type2ReferenceDimension:
                 row[self._key_date_start] = row[self._key_date_start].isoformat()
             if isinstance(row[self._key_date_end], datetime.date):
                 row[self._key_date_end] = row[self._key_date_end].isoformat()
+            success = True
         finally:
-            self.release_lock()
+            self.post_call_stored_procedure(success)
 
         # Make sure the natural key is in the map.
         if natural_key not in self._map:
@@ -102,14 +104,14 @@ class Type2ReferenceDimension:
     @abc.abstractmethod
     def call_stored_procedure(self, natural_key, date, enhancement):
         """
-        Call a stored procedure for getting the technical key for a natural key at a date. Returns the technical ID or
+        Call a stored procedure for getting the technical key of a natural key at a date. Returns the technical ID or
         None if the given natural key is not valid.
 
         :param T natural_key: The natural key.
         :param str date: The date in ISO 8601 (YYYY-MM-DD) format.
         :param T enhancement: Enhancement data of the dimension row.
 
-        :rtype: dict{str,int|None}
+        :rtype: dict
         """
         raise NotImplementedError()
 
@@ -123,8 +125,10 @@ class Type2ReferenceDimension:
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def acquire_lock(self):
+    def pre_call_stored_procedure(self):
         """
+        This method is invoked before call the stored procedure for getting the technical key of a natural key.
+
         In a concurrent environment override this method to acquire a lock on the dimension or dimension hierarchy.
 
         :rtype: None
@@ -132,9 +136,14 @@ class Type2ReferenceDimension:
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def release_lock(self):
+    def post_call_stored_procedure(self, success):
         """
-        In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy.
+        This method is invoked after calling the stored procedure for getting the technical key of a natural key.
+
+        In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy and
+        to commit or rollback the transaction.
+
+        :param bool success: If True the stored procedure is executed successfully. If an exception has occurred.
 
         :rtype: None
         """
