@@ -227,7 +227,7 @@ class UniversalCsvReader(Reader):
         self._csv_reader = csv.reader(self._file,
                                       delimiter=self._formatting_parameters['delimiter'],
                                       escapechar=self._formatting_parameters['escape_char'],
-                                      lineterminator=self._formatting_parameters['encoding'],
+                                      lineterminator=self._formatting_parameters['line_terminator'],
                                       quotechar=self._formatting_parameters['quote_char'])  # Ignored
 
         self._sample = None
