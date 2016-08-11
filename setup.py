@@ -44,5 +44,5 @@ setup(
 
     packages=find_packages(exclude=['build', 'test']),
 
-    install_requires=[]
+    install_requires=['chardet']
 )
