@@ -26,7 +26,7 @@ class DateCleaner:
         if not date:
             return date
 
-        parts = re.split(r'[\-/\. ]', date)
+        parts = re.split(r'[\-/. ]', date)
 
         if len(parts) == 3 or (len(parts) == 4 and (parts[3] in ('00:00:00', '0:00:00'))):
             if len(parts[0]) == 4 and len(parts[1]) <= 2 and len(parts[2]) <= 2:
