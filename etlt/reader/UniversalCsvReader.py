@@ -217,7 +217,7 @@ class UniversalCsvReader(Reader):
         if formatting_parameters1['line_terminator'] == 'auto':
             if not self._sample:
                 self._get_sample('rt', formatting_parameters1['encoding'])
-            self._detect_delimiter()
+            self._detect_line_ending()
 
         self._formatting_parameters = self._helper.pass2(self._filename,
                                                          self._formatting_parameters,
