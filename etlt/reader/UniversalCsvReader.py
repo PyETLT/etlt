@@ -76,6 +76,13 @@ class UniversalCsvReader(Reader):
         :type: dict[str,str]
         """
 
+        self._sample = None
+        """
+        The sample when detecting automatically formatting parameters.
+
+        :type: None|str|bytes
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __enter__(self):
         # Nothing to do.
@@ -222,5 +229,7 @@ class UniversalCsvReader(Reader):
                                       escapechar=self._formatting_parameters['escape_char'],
                                       lineterminator=self._formatting_parameters['encoding'],
                                       quotechar=self._formatting_parameters['quote_char'])  # Ignored
+
+        self._sample = None
 
 # ----------------------------------------------------------------------------------------------------------------------
