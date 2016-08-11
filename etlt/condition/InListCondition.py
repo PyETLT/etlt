@@ -54,16 +54,6 @@ class InListCondition(Condition):
         return self._field
 
     # ------------------------------------------------------------------------------------------------------------------
-    @property
-    def values(self):
-        """
-        Getter for values.
-
-        :rtype: list[str]
-        """
-        return self._values
-
-    # ------------------------------------------------------------------------------------------------------------------
     def populate_values(self, rows, field):
         """
         Populates the filter values of this filter using list of rows.
