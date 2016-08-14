@@ -16,6 +16,24 @@ class AllenTest(unittest.TestCase):
         relation2 = Allen.relation(y[0], y[1], x[0], x[1])
         self.assertEqual(relation1, -1 * relation2)
 
+        relation3 = Allen.relation(x[1], x[0], y[0], y[1])
+        self.assertIsNone(relation3)
+
+        relation4 = Allen.relation(x[0], x[1], y[1], y[0])
+        self.assertIsNone(relation4)
+
+        relation5 = Allen.relation(x[1], x[0], y[1], y[0])
+        self.assertIsNone(relation5)
+
+        relation6 = Allen.relation(y[1], y[0], x[0], x[1])
+        self.assertIsNone(relation6)
+
+        relation7 = Allen.relation(y[0], y[1], x[1], x[0])
+        self.assertIsNone(relation7)
+
+        relation8 = Allen.relation(y[1], y[0], x[1], x[0])
+        self.assertIsNone(relation8)
+
     # ------------------------------------------------------------------------------------------------------------------
     def test_x_takes_place_before_y(self):
         self._test1(Allen.X_BEFORE_Y, (1, 3), (5, 7))

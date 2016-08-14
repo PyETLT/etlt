@@ -20,15 +20,20 @@ class Type2CondenseHelper(Type2Helper):
     @staticmethod
     def _distinct(row1, row2):
         """
-        Returns a list of distinct (or none overlapping) intervals if two intervals are not distinct. Returns None if
-        the two intervals are distinct. The list can have 2 or 3 intervals.
+        Returns a list of distinct (or none overlapping) intervals if two intervals are overlapping. Returns None if
+        the two intervals are none overlapping. The list can have 2 or 3 intervals.
 
         :param tuple[int,int] row1: The first interval.
         :param tuple[int,int] row2: The second interval.
 
-        :rtype: None|tuple[int,int]
+        :rtype: None|list(tuple[int,int])
         """
         relation = Allen.relation(row1[0], row1[1], row2[0], row2[1])
+
+        if relation is None:
+            # One of the 2 intervals is invalid.
+            return []
+
         if relation == Allen.X_BEFORE_Y:
             # row1: |----|
             # row2:            |-----|
@@ -95,13 +100,13 @@ class Type2CondenseHelper(Type2Helper):
             return None  # [(row1[0], row1[1])]
 
         # We got all 13 relation in Allen's interval algebra covered.
-        raise ValueError('Unexpected relation {0:d}'.format(relation))
+        raise ValueError('Unexpected relation {0}'.format(relation))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def _add_interval(all_intervals, new_interval):
         """
-        Adds a new interval to a set of distinct intervals.
+        Adds a new interval to a set of none overlapping intervals.
 
         :param set[(int,int)] all_intervals: The set of distinct intervals.
         :param (int,int) new_interval: The new interval.
@@ -113,13 +118,13 @@ class Type2CondenseHelper(Type2Helper):
             if intervals:
                 break
 
-        if intervals:
+        if intervals is None:
+            all_intervals.add(new_interval)
+        else:
             if old_interval:
                 all_intervals.remove(old_interval)
             for distinct_interval in intervals:
                 Type2CondenseHelper._add_interval(all_intervals, distinct_interval)
-        else:
-            all_intervals.add(new_interval)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _derive_distinct_intervals(self, rows):

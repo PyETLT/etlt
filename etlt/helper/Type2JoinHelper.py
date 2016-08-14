@@ -126,7 +126,11 @@ class Type2JoinHelper(Type2Helper):
                                           prev_row[self._key_end_date],
                                           row[self._key_start_date],
                                           row[self._key_end_date])
-                if relation == Allen.X_BEFORE_Y:
+                if relation is None:
+                    # row holds an invalid interval (prev_row always holds a valid interval). Hence, the join is empty.
+                    return []
+
+                elif relation == Allen.X_BEFORE_Y:
                     # Two rows with distinct intervals.
                     # prev_row: |----|
                     # row:                 |-----|
@@ -194,14 +198,16 @@ class Type2JoinHelper(Type2Helper):
                         ret.append(prev_row)
                         prev_row = row
 
-                    # Note: if the two rows are identical (except for start and end date) nothing to do.
+                        # Note: if the two rows are identical (except for start and end date) nothing to do.
                 else:
                     # Note: The rows are sorted such that prev_row[self._key_begin_date] <= row[self._key_begin_date].
                     # Hence the following relation should not occur: X_DURING_Y,  X_FINISHES_Y, X_BEFORE_Y_INVERSE,
                     # X_MEETS_Y_INVERSE, X_OVERLAPS_WITH_Y_INVERSE, and X_STARTS_Y_INVERSE. Hence, we covered all 13
                     # relations in Allen's interval algebra.
-                    raise ValueError('Data is not sorted properly. Relation: {0:d}'.format(relation))
-            else:
+                    raise ValueError('Data is not sorted properly. Relation: {0}'.format(relation))
+
+            elif row[self._key_start_date] <= row[self._key_end_date]:
+                # row is the first valid row.
                 prev_row = row
 
         if prev_row:
