@@ -133,7 +133,7 @@ class Transformer(metaclass=abc.ABCMeta):
         """
         All _step<n> methods where n is an integer in this class sorted by n.
 
-        :type: list[str]
+        :type: list[callable]
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -169,7 +169,9 @@ class Transformer(metaclass=abc.ABCMeta):
         """
         steps = ([method for method in dir(self) if callable(getattr(self, method)) and
                   re.match(r'_step\d+\d+.*', method)])
-        self._steps = sorted(steps)
+        steps = sorted(steps)
+        for step in steps:
+            self._steps.append(getattr(self, step))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _transform_rows(self):
@@ -259,7 +261,7 @@ class Transformer(metaclass=abc.ABCMeta):
         tmp_row = {}
 
         for step in self._steps:
-            park_info, ignore_info = getattr(self, step)(in_row, tmp_row, out_row)
+            park_info, ignore_info = step(in_row, tmp_row, out_row)
             if park_info or ignore_info:
                 return park_info, ignore_info
 
