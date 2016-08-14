@@ -80,6 +80,10 @@ class Type2JoinHelper(Type2Helper):
 
         :rtype: list[dict[str,T]]
         """
+        # If there are no other keys with start and end date (i.e. nothing to merge) return immediately.
+        if not keys:
+            return rows
+
         ret = list()
         for row in rows:
             start_date = row[self._key_start_date]
