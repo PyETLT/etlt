@@ -9,13 +9,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def _drop_field(rows, field):
-        for row in rows:
-            del row[field]
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def test_merge01a(self):
+    def test_condense01a(self):
         """
         Test condense with 1 interval and one row.
         """
@@ -32,12 +26,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge01b(self):
+    def test_condense01b(self):
         """
         Test condense with 1 interval and 2 rows (X is equal to Y).
         """
@@ -58,12 +51,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge02a(self):
+    def test_condense02a(self):
         """
         Test condense with 2 distinct intervals and 2 rows (X takes place before Y).
         """
@@ -87,12 +79,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge02b(self):
+    def test_condense02b(self):
         """
         Test condense with 2 distinct intervals and 2 rows.
         """
@@ -120,12 +111,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge02c(self):
+    def test_condense02c(self):
         """
         Test condense with 2 distinct intervals and 2 rows (X takes place before Y).
         """
@@ -149,12 +139,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge03a(self):
+    def test_condense03a(self):
         """
         Test condense with 2 overlapping intervals and 2 rows (X overlaps with Y).
         """
@@ -182,12 +171,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge03b(self):
+    def test_condense03b(self):
         """
         Test condense with 2 overlapping intervals and 3 rows.
         """
@@ -219,12 +207,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge03c(self):
+    def test_condense03c(self):
         """
         Test condense with 2 overlapping intervals and 2 rows (X overlaps with Y).
         """
@@ -251,12 +238,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge04a(self):
+    def test_condense04a(self):
         """
         Test condense with 2 overlapping intervals and 2 rows (X starts Y).
         """
@@ -280,12 +266,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge04b(self):
+    def test_condense04b(self):
         """
         Test condense with 2 overlapping intervals adn 3 rows.
         """
@@ -313,12 +298,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge05a(self):
+    def test_condense05a(self):
         """
         Test condense with 2 overlapping intervals and 2 rows (X during Y).
         """
@@ -345,12 +329,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge05b(self):
+    def test_condense05b(self):
         """
         Test condense with 2 overlapping intervals and 3 rows.
         """
@@ -381,12 +364,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge05c(self):
+    def test_condense05c(self):
         """
         Test condense with 2 overlapping intervals and 2 rows (X during Y).
         """
@@ -413,12 +395,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge06a(self):
+    def test_condense06a(self):
         """
         Test condense with 2 overlapping intervals and 2 rows (X finishes Y).
         """
@@ -442,12 +423,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge06b(self):
+    def test_condense06b(self):
         """
         Test condense with 2 overlapping intervals and 3 rows
         """
@@ -475,12 +455,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge06c(self):
+    def test_condense06c(self):
         """
         Test condense with 2 overlapping intervals and 2 rows (X finishes Y).
         """
@@ -504,12 +483,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge07a(self):
+    def test_condense07a(self):
         """
         Test condense with 2 equal intervals and 2 rows.
         """
@@ -531,12 +509,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge07b(self):
+    def test_condense07b(self):
         """
         Test condense with 2 equal intervals and 3 rows.
         """
@@ -562,12 +539,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge8a(self):
+    def test_condense8a(self):
         """
         Test with 3 intervals.
         """
@@ -604,12 +580,11 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_merge8b(self):
+    def test_condense8b(self):
         """
         Test with 5 intervals.
         """
@@ -662,7 +637,6 @@ class Type2CondenseHelperTest(unittest.TestCase):
         helper.prepare_data(rows)
         helper.condense()
         actual = helper.get_rows()
-        self._drop_field(actual, 'period')
 
         self.assertEqual(expected, actual)
 

@@ -5,7 +5,6 @@ Copyright 2016 Set Based IT Consultancy
 
 Licence MIT
 """
-import copy
 
 from etlt.helper.Allen import Allen
 from etlt.helper.Type2Helper import Type2Helper
@@ -14,6 +13,9 @@ from etlt.helper.Type2Helper import Type2Helper
 class Type2CondenseHelper(Type2Helper):
     """
     A helper class for deriving the distinct intervals in reference data with date intervals.
+
+    A typical use case for this class is aggregate the reference data for a type 2 dimension into the reference data
+    for another type 2 dimension at a higher in the dimension hierarchy.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -150,7 +152,7 @@ class Type2CondenseHelper(Type2Helper):
             tmp1 = []
             intervals = sorted(self._derive_distinct_intervals(rows))
             for interval in intervals:
-                tmp2 = copy.copy(rows[0])
+                tmp2 = dict(zip(self._natural_key, natural_key))
                 tmp2[self._key_start_date] = interval[0]
                 tmp2[self._key_end_date] = interval[1]
                 tmp1.append(tmp2)
