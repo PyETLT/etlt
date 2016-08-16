@@ -93,6 +93,9 @@ class Type2Helper:
         :rtype: int
         """
         if isinstance(date, str):
+            if date.endswith(' 00:00:00') or date.endswith('T00:00:00'):
+                # Ignore time suffix.
+                date = date[0:-9]
             tmp = datetime.datetime.strptime(date, '%Y-%m-%d')
             return tmp.toordinal()
 
