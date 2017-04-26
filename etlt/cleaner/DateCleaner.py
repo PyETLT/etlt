@@ -28,7 +28,9 @@ class DateCleaner:
 
         parts = re.split(r'[\-/. ]', date)
 
-        if len(parts) == 3 or (len(parts) == 4 and (parts[3] in ('00:00:00', '0:00:00'))):
+        if (len(parts) == 3) or \
+           (len(parts) == 4 and re.match(r'^[0:]*$', parts[3])) or \
+           (len(parts) == 5 and re.match(r'^[0:]*$', parts[3]) and re.match(r'^0*$', parts[4])):
             if len(parts[0]) == 4 and len(parts[1]) <= 2 and len(parts[2]) <= 2:
                 # Assume date is in  YYYY-MM-DD of YYYY-M-D format.
                 return parts[0] + '-' + ('00' + parts[1])[-2:] + '-' + ('00' + parts[2])[-2:]
