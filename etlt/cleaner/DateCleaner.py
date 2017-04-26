@@ -15,7 +15,7 @@ class DateCleaner:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def clean(date):
+    def clean(date, ignore_time=False):
         """
         Converts a date in miscellaneous format to ISO-8601 (YYYY-MM-DD) format.
 
@@ -29,6 +29,7 @@ class DateCleaner:
         parts = re.split(r'[\-/. ]', date)
 
         if (len(parts) == 3) or \
+           (len(parts) > 3 and ignore_time) or \
            (len(parts) == 4 and re.match(r'^[0:]*$', parts[3])) or \
            (len(parts) == 5 and re.match(r'^[0:]*$', parts[3]) and re.match(r'^0*$', parts[4])):
             if len(parts[0]) == 4 and len(parts[1]) <= 2 and len(parts[2]) <= 2:

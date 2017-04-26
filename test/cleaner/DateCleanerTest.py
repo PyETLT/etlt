@@ -5,8 +5,8 @@ from etlt.cleaner.DateCleaner import DateCleaner
 
 class DateCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
-    def _test(self, expected, dirty):
-        clean = DateCleaner.clean(dirty)
+    def _test(self, expected, dirty, ignore_time=False):
+        clean = DateCleaner.clean(dirty, ignore_time)
         self.assertEqual(expected, clean)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ class DateCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test06(self):
         """
-        Tests with trailing time.
+        Tests with trailing midnight time.
         """
         self._test('1966-04-10', '1966-04-10 00:00:00')
         self._test('1966-04-10', '10-4-1966 0:00:00')
@@ -85,5 +85,20 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1966-04-10', '1966.04.10 00:00:00')
         self._test('1966-04-10', '10.4.1966 0:00:00')
         self._test('1966-04-10', '1966.04.10 00:00:00.000')
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test07(self):
+        """
+        Tests with trailing time.
+        """
+        self._test('1966-04-10', '1966-04-10 23:23:23', True)
+        self._test('1966-04-10', '10-4-1966 3:23:23', True)
+        self._test('1966-04-10', '1966-04-10 23:23:23.231', True)
+        self._test('1966-04-10', '1966-04-10 everything after the date is ignored', True)
+
+        self._test('1966-04-10', '1966.04.10 23:23:23', True)
+        self._test('1966-04-10', '10.4.1966 3:23:23', True)
+        self._test('1966-04-10', '1966.04.10 23:23:23.231', True)
+        self._test('1966-04-10', '1966.04.10 everything after the date is ignored', True)
 
 # ----------------------------------------------------------------------------------------------------------------------
