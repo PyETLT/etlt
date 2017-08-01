@@ -28,7 +28,7 @@ class DateCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test02(self):
         """
-        Tests without a dash as separator.
+        Tests with a dash as separator.
         """
         self._test('1966-04-10', '1966-04-10')  # YYYY-MM-DD format.
         self._test('1971-07-01', '1971-7-1')  # YYYY-M-D format.
@@ -40,7 +40,7 @@ class DateCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test03(self):
         """
-        Tests without a dot as separator.
+        Tests with a dot as separator.
         """
         self._test('1966-04-10', '1966.04.10')  # YYYY.MM.DD format.
         self._test('1971-07-01', '1971.7.1')  # YYYY.M.D format.
@@ -52,7 +52,7 @@ class DateCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test04(self):
         """
-        Tests without a dot slash separator.
+        Tests with a slash separator.
         """
         self._test('1966-04-10', '1966/04/10')  # YYYY/MM/DD format
         self._test('1971-07-01', '1971/7/1')  # YYYY/M/D format.
@@ -64,7 +64,7 @@ class DateCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test05(self):
         """
-        Tests without a space as separator.
+        Tests with a space as separator.
         """
         self._test('1966-04-10', '1966 04 10')  # YYYY MM DD format
         self._test('1971-07-01', '1971 7 1')  # YYYY M D format.
