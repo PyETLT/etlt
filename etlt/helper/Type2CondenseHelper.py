@@ -146,17 +146,17 @@ class Type2CondenseHelper(Type2Helper):
     # ------------------------------------------------------------------------------------------------------------------
     def condense(self):
         """
-        Condense the data set to the distinct intervals based on the natural key.
+        Condense the data set to the distinct intervals based on the pseudo key.
         """
-        for natural_key, rows in self.rows.items():
+        for pseudo_key, rows in self.rows.items():
             tmp1 = []
             intervals = sorted(self._derive_distinct_intervals(rows))
             for interval in intervals:
-                tmp2 = dict(zip(self._natural_key, natural_key))
+                tmp2 = dict(zip(self._pseudo_key, pseudo_key))
                 tmp2[self._key_start_date] = interval[0]
                 tmp2[self._key_end_date] = interval[1]
                 tmp1.append(tmp2)
 
-            self.rows[natural_key] = tmp1
+            self.rows[pseudo_key] = tmp1
 
 # ----------------------------------------------------------------------------------------------------------------------

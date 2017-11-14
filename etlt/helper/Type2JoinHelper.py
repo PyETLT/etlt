@@ -222,21 +222,21 @@ class Type2JoinHelper(Type2Helper):
     # ------------------------------------------------------------------------------------------------------------------
     def merge(self, keys):
         """
-        Merges the join on natural keys of two or more reference data sets.
+        Merges the join on pseudo keys of two or more reference data sets.
 
         :param list[tuple[str,str]] keys: For each data set the keys of the start and end date.
         """
         deletes = []
-        for natural_key, rows in self.rows.items():
+        for pseudo_key, rows in self.rows.items():
             self._additional_rows_date2int(keys, rows)
             rows = self._intersection(keys, rows)
             if rows:
                 rows = self._rows_sort(rows)
-                self.rows[natural_key] = self._merge_adjacent_rows(rows)
+                self.rows[pseudo_key] = self._merge_adjacent_rows(rows)
             else:
-                deletes.append(natural_key)
+                deletes.append(pseudo_key)
 
-        for natural_key in deletes:
-            del self.rows[natural_key]
+        for pseudo_key in deletes:
+            del self.rows[pseudo_key]
 
 # ----------------------------------------------------------------------------------------------------------------------

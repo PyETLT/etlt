@@ -15,17 +15,17 @@ class Type2Helper:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, key_start_date, key_end_date, natural_key):
+    def __init__(self, key_start_date, key_end_date, pseudo_key):
         """
         Object constructor.
 
         :param str key_start_date: The key of the start date in the rows.
         :param str key_end_date: The key of the end date in the rows.
-        :param list[str] natural_key: The keys of the columns that form the natural key.
+        :param list[str] pseudo_key: The keys of the columns that form the pseudo key.
         """
-        self._natural_key = list(natural_key)
+        self._pseudo_key = list(pseudo_key)
         """
-        The keys of the columns that form the natural key.
+        The keys of the columns that form the pseudo key.
 
         :type: list[str]
         """
@@ -52,7 +52,7 @@ class Type2Helper:
 
         self._copy = True
         """
-        If set to true a copy will be made from the original rows such that the original rows is not modified.
+        If set to true a copy will be made from the original rows such that the original rows are not modified.
 
          :type: bool
         """
@@ -68,16 +68,16 @@ class Type2Helper:
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_natural_key(self, row):
+    def _get_pseudo_key(self, row):
         """
-        Returns the natural key in a row.
+        Returns the pseudo key in a row.
 
         :param dict row: The row.
 
         :rtype: tuple
         """
         ret = list()
-        for key in self._natural_key:
+        for key in self._pseudo_key:
             ret.append(row[key])
 
         return tuple(ret)
@@ -184,25 +184,25 @@ class Type2Helper:
     # ------------------------------------------------------------------------------------------------------------------
     def enumerate(self, name, start=1):
         """
-        Enumerates all rows such that the natural key and the ordinal number are a unique key.
+        Enumerates all rows such that the pseudo key and the ordinal number are a unique key.
 
         :param str name: The key holding the ordinal number.
-        :param int start: The start of the ordinal numbers. Foreach natural key the first row has this ordinal number.
+        :param int start: The start of the ordinal numbers. Foreach pseudo key the first row has this ordinal number.
         """
-        for natural_key, rows in self.rows.items():
+        for pseudo_key, rows in self.rows.items():
             rows = self._rows_sort(rows)
             ordinal = start
             for row in rows:
                 row[name] = ordinal
                 ordinal += 1
-            self.rows[natural_key] = rows
+            self.rows[pseudo_key] = rows
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_rows(self, sort=False):
         """
         Returns the rows of this Type2Helper.
 
-        :param bool sort: If True the rows are sorted by the natural key.
+        :param bool sort: If True the rows are sorted by the pseudo key.
         """
         ret = []
         for _, rows in sorted(self.rows.items()) if sort else self.rows.items():
@@ -215,20 +215,20 @@ class Type2Helper:
     def prepare_data(self, rows):
         """
         Sets and prepares the rows. The rows are stored in groups in a dictionary. A group is a list of rows with the
-        same natural key. The key in the dictionary is a tuple with the values of the natural key.
+        same pseudo key. The key in the dictionary is a tuple with the values of the pseudo key.
 
         :param list[dict] rows: The rows
         """
         self.rows = dict()
         for row in copy.copy(rows) if self._copy else rows:
-            natural_key = self._get_natural_key(row)
-            if natural_key not in self.rows:
-                self.rows[natural_key] = list()
-            self.rows[natural_key].append(row)
+            pseudo_key = self._get_pseudo_key(row)
+            if pseudo_key not in self.rows:
+                self.rows[pseudo_key] = list()
+            self.rows[pseudo_key].append(row)
 
         # Convert begin and end dates to integers.
         self._date_type = None
-        for natural_key, rows in self.rows.items():
-            self.rows[natural_key] = self._rows_date2int(rows)
+        for pseudo_key, rows in self.rows.items():
+            self.rows[pseudo_key] = self._rows_date2int(rows)
 
 # ----------------------------------------------------------------------------------------------------------------------
