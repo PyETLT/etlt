@@ -19,11 +19,11 @@ class Reader(metaclass=abc.ABCMeta):
         """
         Object constructor.
         """
-        self._fields = []
+        self._fields = None
         """
         The fields (or columns) that this reader will read from the source.
 
-        :type: list[str]
+        :type: list[str]|None
         """
 
         self._row_number = -1
@@ -39,7 +39,7 @@ class Reader(metaclass=abc.ABCMeta):
         """
         Getter for fields.
 
-        :rtype: list[str]
+        :rtype: list[str]|None
         """
         return copy.copy(self._fields)
 
@@ -47,9 +47,10 @@ class Reader(metaclass=abc.ABCMeta):
     @fields.setter
     def fields(self, fields):
         """
-        Setter for fields.
+        Setter for fields. If set to None this reader yields each row from the source as a list. If set to a list of
+        field names this reader yields each row from the source as a dictionary using the given field names.
 
-        :param list[str] fields: The fields (or columns) that must be read from the source.
+        :param list[str]|None fields: The fields (or columns) that must be read from the source.
         """
         self._fields = fields
 

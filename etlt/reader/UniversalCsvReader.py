@@ -110,7 +110,10 @@ class UniversalCsvReader(Reader):
             self._open()
             for row in self._csv_reader:
                 self._row_number += 1
-                yield dict(zip_longest(self._fields, row, fillvalue=''))
+                if self._fields:
+                    yield dict(zip_longest(self._fields, row, fillvalue=''))
+                else:
+                    yield row
             self._close()
             self._row_number = -1
 
