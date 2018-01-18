@@ -148,7 +148,7 @@ class Type2CondenseHelper(Type2Helper):
         """
         Condense the data set to the distinct intervals based on the pseudo key.
         """
-        for pseudo_key, rows in self.rows.items():
+        for pseudo_key, rows in self._rows.items():
             tmp1 = []
             intervals = sorted(self._derive_distinct_intervals(rows))
             for interval in intervals:
@@ -157,6 +157,6 @@ class Type2CondenseHelper(Type2Helper):
                 tmp2[self._key_end_date] = interval[1]
                 tmp1.append(tmp2)
 
-            self.rows[pseudo_key] = tmp1
+            self._rows[pseudo_key] = tmp1
 
 # ----------------------------------------------------------------------------------------------------------------------

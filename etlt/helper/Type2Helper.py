@@ -8,6 +8,8 @@ Licence MIT
 import copy
 import datetime
 
+from etlt.helper.Allen import Allen
+
 
 class Type2Helper:
     """
@@ -23,6 +25,13 @@ class Type2Helper:
         :param str key_end_date: The key of the end date in the rows.
         :param list[str] pseudo_key: The keys of the columns that form the pseudo key.
         """
+        self.copy = True
+        """
+        If set to true a copy will be made from the original rows such that the original rows are not modified.
+
+         :type: bool
+        """
+
         self._pseudo_key = list(pseudo_key)
         """
         The keys of the columns that form the pseudo key.
@@ -43,18 +52,11 @@ class Type2Helper:
         :type: str
         """
 
-        self.rows = dict()
+        self._rows = dict()
         """
         The data set.
 
         :type: dict
-        """
-
-        self._copy = True
-        """
-        If set to true a copy will be made from the original rows such that the original rows are not modified.
-
-         :type: bool
         """
 
         self._date_type = ''
@@ -113,10 +115,7 @@ class Type2Helper:
         Replaces start and end dates in a row set with their integer representation
 
         :param list[dict[str,T]] rows: The list of rows.
-
-        :rtype: list[dict[str,T]]
         """
-        ret = list()
         for row in rows:
             # Determine the type of dates based on the first start date.
             if not self._date_type:
@@ -125,9 +124,6 @@ class Type2Helper:
             # Convert dates to integers.
             row[self._key_start_date] = self._date2int(row[self._key_start_date])
             row[self._key_end_date] = self._date2int(row[self._key_end_date])
-            ret.append(row)
-
-        return ret
 
     # ------------------------------------------------------------------------------------------------------------------
     def _rows_int2date(self, rows):
@@ -182,6 +178,134 @@ class Type2Helper:
         raise ValueError('Unexpected type {0!s}'.format(date.__class__))
 
     # ------------------------------------------------------------------------------------------------------------------
+    def _equal(self, row1, row2):
+        """
+        Returns True if two rows are identical excluding start and end date. Returns False otherwise.
+
+        :param dict[str,T] row1: The first row.
+        :param dict[str,T] row2: The second row.
+
+        :rtype: bool
+        """
+        for key in row1.keys():
+            if key not in [self._key_start_date, self._key_end_date]:
+                if row1[key] != row2[key]:
+                    return False
+
+        return True
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _merge_adjacent_rows(self, rows):
+        """
+        Resolves adjacent and overlapping rows. Overlapping rows are resolved as follows:
+        * The interval with the most recent begin date prevails for the overlapping period.
+        * If the begin dates are the same the interval with the most recent end date prevails.
+        * If the begin and end dates are equal the last row in the data set prevails.
+        Identical (excluding begin and end date) adjacent rows are replace with a single row.
+
+        :param list[dict[str,T]] rows: The rows in a group (i.e. with the same natural key).
+        .
+        :rtype: list[dict[str,T]]
+        """
+        ret = list()
+
+        prev_row = None
+        for row in rows:
+            if prev_row:
+                relation = Allen.relation(prev_row[self._key_start_date],
+                                          prev_row[self._key_end_date],
+                                          row[self._key_start_date],
+                                          row[self._key_end_date])
+                if relation is None:
+                    # row holds an invalid interval (prev_row always holds a valid interval). Hence, the join is empty.
+                    return []
+
+                elif relation == Allen.X_BEFORE_Y:
+                    # Two rows with distinct intervals.
+                    # prev_row: |----|
+                    # row:                 |-----|
+                    ret.append(prev_row)
+                    prev_row = row
+
+                elif relation == Allen.X_MEETS_Y:
+                    # The two rows are adjacent.
+                    # prev_row: |-------|
+                    # row:               |-------|
+                    if self._equal(prev_row, row):
+                        # The two rows are identical (except for start and end date) and adjacent. Combine the two rows
+                        # into one row.
+                        prev_row[self._key_end_date] = row[self._key_end_date]
+                    else:
+                        # Rows are adjacent but not identical.
+                        ret.append(prev_row)
+                        prev_row = row
+
+                elif relation == Allen.X_OVERLAPS_WITH_Y:
+                    # prev_row overlaps row. Should not occur with proper reference data.
+                    # prev_row: |-----------|
+                    # row:            |----------|
+                    if self._equal(prev_row, row):
+                        # The two rows are identical (except for start and end date) and overlapping. Combine the two
+                        # rows into one row.
+                        prev_row[self._key_end_date] = row[self._key_end_date]
+                    else:
+                        # Rows are overlapping but not identical.
+                        prev_row[self._key_end_date] = row[self._key_start_date] - 1
+                        ret.append(prev_row)
+                        prev_row = row
+
+                elif relation == Allen.X_STARTS_Y:
+                    # prev_row start row. Should not occur with proper reference data.
+                    # prev_row: |------|
+                    # row:      |----------------|
+                    prev_row = row
+
+                elif relation == Allen.X_EQUAL_Y:
+                    # Can happen when the reference data sets are joined without respect for date intervals.
+                    # prev_row: |----------------|
+                    # row:      |----------------|
+                    prev_row = row
+
+                elif relation == Allen.X_DURING_Y_INVERSE:
+                    # row during prev_row. Should not occur with proper reference data.
+                    # prev_row: |----------------|
+                    # row:           |------|
+                    # Note: the interval with the most recent start date prevails. Hence, the interval after
+                    # row[self._key_end_date] is discarded.
+                    if self._equal(prev_row, row):
+                        prev_row[self._key_end_date] = row[self._key_end_date]
+                    else:
+                        prev_row[self._key_end_date] = row[self._key_start_date] - 1
+                        ret.append(prev_row)
+                        prev_row = row
+
+                elif relation == Allen.X_FINISHES_Y_INVERSE:
+                    # row finishes prev_row. Should not occur with proper reference data.
+                    # prev_row: |----------------|
+                    # row:                |------|
+                    if not self._equal(prev_row, row):
+                        prev_row[self._key_end_date] = row[self._key_start_date] - 1
+                        ret.append(prev_row)
+                        prev_row = row
+
+                        # Note: if the two rows are identical (except for start and end date) nothing to do.
+                else:
+                    # Note: The rows are sorted such that prev_row[self._key_begin_date] <= row[self._key_begin_date].
+                    # Hence the following relation should not occur: X_DURING_Y,  X_FINISHES_Y, X_BEFORE_Y_INVERSE,
+                    # X_MEETS_Y_INVERSE, X_OVERLAPS_WITH_Y_INVERSE, and X_STARTS_Y_INVERSE. Hence, we covered all 13
+                    # relations in Allen's interval algebra.
+                    raise ValueError('Data is not sorted properly. Relation: {0}'.format(relation))
+
+            elif row[self._key_start_date] <= row[self._key_end_date]:
+                # row is the first valid row.
+                prev_row = row
+
+        if prev_row:
+            ret.append(prev_row)
+
+        return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
     def enumerate(self, name, start=1):
         """
         Enumerates all rows such that the pseudo key and the ordinal number are a unique key.
@@ -189,13 +313,13 @@ class Type2Helper:
         :param str name: The key holding the ordinal number.
         :param int start: The start of the ordinal numbers. Foreach pseudo key the first row has this ordinal number.
         """
-        for pseudo_key, rows in self.rows.items():
+        for pseudo_key, rows in self._rows.items():
             rows = self._rows_sort(rows)
             ordinal = start
             for row in rows:
                 row[name] = ordinal
                 ordinal += 1
-            self.rows[pseudo_key] = rows
+            self._rows[pseudo_key] = rows
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_rows(self, sort=False):
@@ -205,7 +329,7 @@ class Type2Helper:
         :param bool sort: If True the rows are sorted by the pseudo key.
         """
         ret = []
-        for _, rows in sorted(self.rows.items()) if sort else self.rows.items():
+        for _, rows in sorted(self._rows.items()) if sort else self._rows.items():
             self._rows_int2date(rows)
             ret.extend(rows)
 
@@ -219,16 +343,16 @@ class Type2Helper:
 
         :param list[dict] rows: The rows
         """
-        self.rows = dict()
-        for row in copy.copy(rows) if self._copy else rows:
+        self._rows = dict()
+        for row in copy.copy(rows) if self.copy else rows:
             pseudo_key = self._get_pseudo_key(row)
-            if pseudo_key not in self.rows:
-                self.rows[pseudo_key] = list()
-            self.rows[pseudo_key].append(row)
+            if pseudo_key not in self._rows:
+                self._rows[pseudo_key] = list()
+            self._rows[pseudo_key].append(row)
 
         # Convert begin and end dates to integers.
         self._date_type = None
-        for pseudo_key, rows in self.rows.items():
-            self.rows[pseudo_key] = self._rows_date2int(rows)
+        for pseudo_key, rows in self._rows.items():
+            self._rows_date2int(rows)
 
 # ----------------------------------------------------------------------------------------------------------------------
