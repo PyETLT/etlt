@@ -14,12 +14,36 @@ class DateCleaner:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
+    month_map = {
+        # English
+        'jan': '01',
+        'feb': '02',
+        'mar': '03',
+        'apr': '04',
+        'may': '05',
+        'jun': '06',
+        'jul': '07',
+        'aug': '08',
+        'sep': '09',
+        'oct': '10',
+        'nov': '11',
+        'dec': '12',
+
+        # Dutch
+        'mrt': '03',
+        'mei': '05',
+        'okt': '10'
+    }
+
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def clean(date, ignore_time=False):
         """
         Converts a date in miscellaneous format to ISO-8601 (YYYY-MM-DD) format.
 
         :param str date: The input date.
+        :param bool ignore_time: If true any trailing time prt is ignore.
+
         :rtype: str
         """
         # Return empty input immediately.
@@ -29,9 +53,9 @@ class DateCleaner:
         parts = re.split(r'[\-/. ]', date)
 
         if (len(parts) == 3) or \
-           (len(parts) > 3 and ignore_time) or \
-           (len(parts) == 4 and re.match(r'^[0:]*$', parts[3])) or \
-           (len(parts) == 5 and re.match(r'^[0:]*$', parts[3]) and re.match(r'^0*$', parts[4])):
+                (len(parts) > 3 and ignore_time) or \
+                (len(parts) == 4 and re.match(r'^[0:]*$', parts[3])) or \
+                (len(parts) == 5 and re.match(r'^[0:]*$', parts[3]) and re.match(r'^0*$', parts[4])):
             if len(parts[0]) == 4 and len(parts[1]) <= 2 and len(parts[2]) <= 2:
                 # Assume date is in  YYYY-MM-DD of YYYY-M-D format.
                 return parts[0] + '-' + ('00' + parts[1])[-2:] + '-' + ('00' + parts[2])[-2:]
@@ -45,6 +69,15 @@ class DateCleaner:
                 year = '19' + parts[2] if parts[2] >= '20' else '20' + parts[2]
 
                 return year + '-' + ('00' + parts[1])[-2:] + '-' + ('00' + parts[0])[-2:]
+
+        if len(parts) == 1 and len(date) == 9:
+            # Try DDmonYYYY format
+            match = re.match(r'^(\d{2})([a-z]{3})(\d{4})$', date.lower())
+            if match and match.group(2) in DateCleaner.month_map:
+                return match.group(3) + '-' + DateCleaner.month_map[match.group(2)] + '-' + match.group(1)
+            else:
+                # Format not recognized. Just return the original string.
+                return date
 
         if len(parts) == 1 and len(date) == 8:
             # Assume date is in YYYYMMDD format.

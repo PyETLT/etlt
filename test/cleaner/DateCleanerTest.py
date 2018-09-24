@@ -24,6 +24,7 @@ class DateCleanerTest(unittest.TestCase):
         Tests without a separator.
         """
         self._test('1966-04-10', '19660410')  # YYYYMMDD format.
+        self._test('2014-01-02', '02jan2014')  # DDmonYYYY format.
 
     # ------------------------------------------------------------------------------------------------------------------
     def test02(self):
