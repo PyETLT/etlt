@@ -19,12 +19,22 @@ class DateCleanerTest(unittest.TestCase):
         self._test('2000-123-123', '2000-123-123')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test01(self):
+    def test01a(self):
         """
         Tests without a separator.
         """
         self._test('1966-04-10', '19660410')  # YYYYMMDD format.
         self._test('2014-01-02', '02jan2014')  # DDmonYYYY format.
+        self._test('2014-01-03', '03JAN2014')  # DDMONYYYY format.
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test01b(self):
+        """
+        Tests without a separator ignoring time.
+        """
+        self._test('1966-04-10', '19660410 141500', True)  # YYYYMMDD format.
+        self._test('2014-01-02', '02jan2014:14:15:00', True)  # DDmonYYYY format.
+        self._test('2014-01-03', '03JAN2014:14:15:00', True)  # DDMONYYYY format.
 
     # ------------------------------------------------------------------------------------------------------------------
     def test02(self):
