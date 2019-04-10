@@ -70,14 +70,17 @@ class DateCleaner:
 
                 return year + '-' + ('00' + parts[1])[-2:] + '-' + ('00' + parts[0])[-2:]
 
-        # Try DDmonYYYY format
-        pattern = '^(\d{2})([a-z]{3})(\d{4})' + ('.*$' if ignore_time else '$')
+        # Try DDmonYYYY or DDmonYYYY HH:mm:ss format
+        pattern = r'^(\d{2})([a-z]{3})(\d{4})' + ('.*$' if ignore_time else r'(\D(\d{1,2})\D(\d{1,2})\D(\d{1,2}))?$')
         match = re.match(pattern, date.lower())
         if match and match.group(2) in DateCleaner.month_map:
-            return match.group(3) + '-' + DateCleaner.month_map[match.group(2)] + '-' + match.group(1)
+            ret = match.group(3) + '-' + DateCleaner.month_map[match.group(2)] + '-' + match.group(1)
+            if len(match.groups()) == 7 and match.group(4):
+                ret += 'T' + match.group(5) + ':' + match.group(6) + ':' + match.group(7)
+            return ret
 
         # Try YYYYMMDD format.
-        pattern = '^\d{8}' + ('.*$' if ignore_time else '$')
+        pattern = r'^\d{8}' + ('.*$' if ignore_time else '$')
         match = re.match(pattern, date)
         if match:
             # Assume date is YYYYMMDD format

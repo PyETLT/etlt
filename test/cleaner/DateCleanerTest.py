@@ -26,6 +26,8 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1966-04-10', '19660410')  # YYYYMMDD format.
         self._test('2014-01-02', '02jan2014')  # DDmonYYYY format.
         self._test('2014-01-03', '03JAN2014')  # DDMONYYYY format.
+        self._test('2014-01-02T14:15:00', '02jan2014:14:15:00')  # DDmonYYYY HH:mm:ssformat.
+        self._test('2014-01-03T14:15:00', '03JAN2014:14:15:00')  # DDMONYYYY HH:mm:ssformat.
 
     # ------------------------------------------------------------------------------------------------------------------
     def test01b(self):
@@ -35,6 +37,8 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1966-04-10', '19660410 141500', True)  # YYYYMMDD format.
         self._test('2014-01-02', '02jan2014:14:15:00', True)  # DDmonYYYY format.
         self._test('2014-01-03', '03JAN2014:14:15:00', True)  # DDMONYYYY format.
+        self._test('2014-01-02', '02jan2014:14:15:00', True)  # DDmonYYYY HH:mm:ssformat.
+        self._test('2014-01-03', '03JAN2014:14:15:00', True)  # DDMONYYYY HH:mm:ssformat.
 
     # ------------------------------------------------------------------------------------------------------------------
     def test02(self):
