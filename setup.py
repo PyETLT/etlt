@@ -15,7 +15,7 @@ setup(
     description='Extract Transform Load - but not in that strict order',
     long_description=long_description,
 
-    url='https://github.com/SetBased/py-etlt',
+    url='https://github.com/PyETLT/etlt',
 
     author='Paul Water',
     author_email='info@setbased.nl',
