@@ -23,9 +23,11 @@ class MoneyCleanerTest(unittest.TestCase):
         Test with Dutch formats and thousand separators.
         """
         self._test('1123.1', '1.123,1')
+        self._test('1123', '1.123')
         self._test('1123.1', '1 123,1')
         self._test('1123.12', '1.123,12')
         self._test('1123.12', '1 123,12')
+        self._test('1123', '1 123')
 
     # ------------------------------------------------------------------------------------------------------------------
     def test02(self):
@@ -40,7 +42,7 @@ class MoneyCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test03(self):
         """
-        Tests with decimal pint and commas without thousand separators.
+        Tests with decimal point and commas without thousand separators.
         """
         self._test('123.1', '123.1')
         self._test('123.1', '123,1')
@@ -50,7 +52,7 @@ class MoneyCleanerTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def test04(self):
         """
-        Tests with decimal pint and commas without thousands separators.
+        Tests with decimal point and commas without thousands separators.
         """
         self._test('1451.3', '1451.3')
         self._test('1451.3', '1451,3')
