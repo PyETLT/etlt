@@ -1,7 +1,6 @@
 <project name="ETLT" default="build" basedir=".">
     <taskdef name="ReadSemanticVersion" classname="vendor.setbased.phing-extensions.src.Task.ReadSemanticVersionTask"/>
     <property name="BUILD_DIR" value="./build"/>
-    <property name="VERSION" value="0.0.0"/>
 
     <!-- Run composer update and executes various other updates -->
     <target name="composer-update">
