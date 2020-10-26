@@ -1,7 +1,9 @@
+from abc import ABC
+
 from etlt.condition.Condition import Condition
 
 
-class CompoundCondition(Condition):
+class CompoundCondition(Condition, ABC):
     """
     Abstract parent class for conditions with one or more child conditions.
     """

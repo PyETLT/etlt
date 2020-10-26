@@ -51,7 +51,8 @@ class SimpleCondition(Condition):
         return self._field
 
     # ------------------------------------------------------------------------------------------------------------------
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def scheme(self):
         """
         Returns the scheme of the simple condition.
