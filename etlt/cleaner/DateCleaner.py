@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 
 class DateCleaner:
@@ -30,14 +31,14 @@ class DateCleaner:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def clean(date, ignore_time=False):
+    def clean(date: Optional[str], ignore_time: bool = False) -> Optional[str]:
         """
         Converts a date in miscellaneous format to ISO-8601 (YYYY-MM-DD) format.
 
-        :param str date: The input date.
+        :param str|None date: The input date.
         :param bool ignore_time: If true any trailing time prt is ignore.
 
-        :rtype: str
+        :rtype: strNone
         """
         # Return empty input immediately.
         if not date:

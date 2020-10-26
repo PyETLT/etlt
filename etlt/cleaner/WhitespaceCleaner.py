@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class WhitespaceCleaner:
     """
     Utility class for cleaning whitespace from strings.
@@ -5,7 +8,7 @@ class WhitespaceCleaner:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def clean(string):
+    def clean(string: Optional[str]) -> Optional[str]:
         """
         Prunes whitespace from a string.
 

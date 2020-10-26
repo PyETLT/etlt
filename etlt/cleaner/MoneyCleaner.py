@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 
 class MoneyCleaner:
@@ -8,13 +9,13 @@ class MoneyCleaner:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def clean(amount):
+    def clean(amount: Optional[str]) -> Optional[str]:
         """
         Converts a number to a number with decimal point.
 
-        :param str amount: The input number.
+        :param str|None amount: The input number.
 
-        :rtype: str
+        :rtype: str|None
         """
         # Return empty input immediately.
         if not amount:

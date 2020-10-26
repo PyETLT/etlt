@@ -3,8 +3,11 @@ import copy
 import re
 import time
 import traceback
+from typing import Any, Dict, List
 
 from etlt.cleaner.WhitespaceCleaner import WhitespaceCleaner
+from etlt.reader.Reader import Reader
+from etlt.writer.SqlLoaderWriter import SqlLoaderWriter
 
 
 class Transformer(metaclass=abc.ABCMeta):
@@ -13,120 +16,93 @@ class Transformer(metaclass=abc.ABCMeta):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, source_reader, transformed_writer, parked_writer, ignored_writer):
+    def __init__(self,
+                 source_reader: Reader,
+                 transformed_writer: SqlLoaderWriter,
+                 parked_writer: SqlLoaderWriter,
+                 ignored_writer: SqlLoaderWriter):
         """
         Object constructor.
 
-        :param etlt.reader.Reader.Reader source_reader: Object for reading source rows.
-        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter transformed_writer: Object for writing successfully
-                                                                               transformed rows.
-        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter parked_writer: Object for writing parked rows.
-        :param etlt.writer.SqlLoaderWriter.SqlLoaderWriter ignored_writer: Object for writing ignored rows.
+        :param Reader source_reader: Object for reading source rows.
+        :param SqlLoaderWriter transformed_writer: Object for writing successfully transformed rows.
+        :param SqlLoaderWriter parked_writer: Object for writing parked rows.
+        :param SqlLoaderWriter ignored_writer: Object for writing ignored rows.
         """
 
-        self._count_total = 0
+        self._count_total: int = 0
         """
         The number of rows processed.
-
-        :type: int
         """
 
-        self._count_transform = 0
+        self._count_transform: int = 0
         """
         The number of rows successfully transformed.
-
-        :type: int
         """
 
-        self._count_park = 0
+        self._count_park: int = 0
         """
         The number of rows parked.
-
-        :type: int
         """
 
-        self._count_error = 0
+        self._count_error: int = 0
         """
         The number of rows processed with errors.
-
-        :type: int
         """
 
-        self._count_ignore = 0
+        self._count_ignore: int = 0
         """
         The number of rows ignored.
-
-        :type: int
         """
 
-        self._time0 = 0.0
+        self._time0: float = 0.0
         """
         Start time of the whole process and start of transforming rows.
-
-        :type: float
         """
 
-        self._time1 = 0.0
+        self._time1: float = 0.0
         """
         End time of transforming rows and start time of the loading transformed rows.
-
-        :type: float
         """
 
-        self._time2 = 0.0
+        self._time2: float = 0.0
         """
         End time of the loading transformed rows and start time of loading parked rows.
-
-        :type: float
         """
 
-        self._time3 = 0.0
+        self._time3: float = 0.0
         """
         End time of the loading parked rows and end time of the whole process.
-
-        :type: float
         """
 
-        self._source_reader = source_reader
+        self._source_reader: Reader = source_reader
         """
         Object for reading source rows.
-
-        :type: etlt.Reader.Reader
         """
 
-        self._transformed_writer = transformed_writer
+        self._transformed_writer: SqlLoaderWriter = transformed_writer
         """
-        Object for writing successfully transformed rows.
-
-        :type: etlt.writer.SqlLoaderWriter.SqlLoaderWriter
+        Object for writing successfully transformed rows.r
         """
 
-        self._parked_writer = parked_writer
+        self._parked_writer: SqlLoaderWriter = parked_writer
         """
         Object for writing parked rows.
-
-        :type: etlt.writer.SqlLoaderWriter.SqlLoaderWriter
         """
 
-        self._ignored_writer = ignored_writer
+        self._ignored_writer: SqlLoaderWriter = ignored_writer
         """
         Object for writing ignored rows.
-
-        :type: etlt.writer.SqlLoaderWriter.SqlLoaderWriter
         """
 
-        self._mandatory_fields = []
+        self._mandatory_fields: List[str] = []
         """
         The mandatory fields (or columns) in the output row.
-
-         :type: list[str]
         """
 
-        self._steps = []
+        self._steps: List[callable] = []
         """
         All _step<n> methods where n is an integer in this class sorted by n.
-
-        :type: list[callable]
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -143,7 +119,7 @@ class Transformer(metaclass=abc.ABCMeta):
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' ' + str(message), flush=True)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _handle_exception(self, row, exception):
+    def _handle_exception(self, row, exception) -> None:
         """
         Logs an exception occurred during transformation of a row.
 
@@ -156,7 +132,7 @@ class Transformer(metaclass=abc.ABCMeta):
         self._log(traceback.format_exc())
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _find_all_step_methods(self):
+    def _find_all_step_methods(self) -> None:
         """
         Finds all _step<n> methods where n is an integer in this class.
         """
@@ -167,7 +143,7 @@ class Transformer(metaclass=abc.ABCMeta):
             self._steps.append(getattr(self, step))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _transform_rows(self):
+    def _transform_rows(self) -> None:
         """
         Transforms all source rows.
         """
@@ -177,7 +153,7 @@ class Transformer(metaclass=abc.ABCMeta):
             self._transform_row_wrapper(row)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def pre_park_row(self, park_info, in_row):
+    def pre_park_row(self, park_info, in_row) -> None:
         """
         This method will be called just be for sending an input row to be parked to the parked writer.
 
@@ -189,7 +165,7 @@ class Transformer(metaclass=abc.ABCMeta):
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def pre_ignore_row(self, ignore_info, in_row):
+    def pre_ignore_row(self, ignore_info, in_row) -> None:
         """
         This method will be called just be for sending an input row to be ignored to the ignore writer.
 
@@ -201,11 +177,11 @@ class Transformer(metaclass=abc.ABCMeta):
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _transform_row_wrapper(self, row):
+    def _transform_row_wrapper(self, row: Dict[str, Any]) -> None:
         """
         Transforms a single source row.
 
-        :param dict[str|str] row: The source row.
+        :param dict[str,any] row: The source row.
         """
         self._count_total += 1
 
@@ -294,7 +270,7 @@ class Transformer(metaclass=abc.ABCMeta):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _load_ignored_rows(self):
+    def _load_ignored_rows(self) -> None:
         """
         Loads the ignored rows into the database.
 
@@ -304,7 +280,7 @@ class Transformer(metaclass=abc.ABCMeta):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _load_parked_rows(self):
+    def _load_parked_rows(self) -> None:
         """
         Loads the parked rows into the database.
 
@@ -314,7 +290,7 @@ class Transformer(metaclass=abc.ABCMeta):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _load_transformed_rows(self):
+    def _load_transformed_rows(self) -> None:
         """
         Loads the successfully transformed rows into the database.
 
@@ -323,7 +299,7 @@ class Transformer(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _log_statistics(self):
+    def _log_statistics(self) -> None:
         """
         Log statistics about the number of rows and number of rows per second.
         """
@@ -341,7 +317,7 @@ class Transformer(metaclass=abc.ABCMeta):
         self._log('Number of rows per second overall   : {0:d}'.format(int(rows_per_second_overall)))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def pre_transform_source_rows(self):
+    def pre_transform_source_rows(self) -> None:
         """
         This method will be called just before transforming the source rows.
 
@@ -350,7 +326,7 @@ class Transformer(metaclass=abc.ABCMeta):
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def transform_source_rows(self):
+    def transform_source_rows(self) -> None:
         """
         Transforms the rows for the source system into (partial) dimensional data.
         """
