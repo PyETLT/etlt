@@ -1,12 +1,3 @@
-"""
-ETLT
-
-Copyright 2016 Set Based IT Consultancy
-
-Licence MIT
-"""
-
-
 class Allen:
     """
     Utility class for Allen's interval algebra, https://en.wikipedia.org/wiki/Allen%27s_interval_algebra.

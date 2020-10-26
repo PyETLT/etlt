@@ -1,13 +1,5 @@
-"""
-ETLT
-
-Copyright 2016 Set Based IT Consultancy
-
-Licence MIT
-"""
-from etlt.condition.SimpleConditionFactory import SimpleConditionFactory
-
 from etlt.condition.Condition import Condition
+from etlt.condition.SimpleConditionFactory import SimpleConditionFactory
 
 
 class InListCondition(Condition):

@@ -1,10 +1,3 @@
-"""
-ETLT
-
-Copyright 2016 Set Based IT Consultancy
-
-Licence MIT
-"""
 import bz2
 import csv
 from itertools import zip_longest

@@ -1,12 +1,3 @@
-"""
-ETLT
-
-Copyright 2016 Set Based IT Consultancy
-
-Licence MIT
-"""
-
-
 class UniversalCsvReaderFormatHelper:
     """
     A helper class for UniversalCsvReader for setting and correcting the formatting parameters for reading CSV files.

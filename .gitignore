@@ -1,10 +1,10 @@
 *.pyc
 /.coverage
 /.idea/
+/ETLT.egg-info/
 /bin/
 /composer.lock
 /dist/
 /test/html/
 /vendor/
 /venv/
-ETLT.egg-info/
