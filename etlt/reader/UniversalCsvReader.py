@@ -118,7 +118,8 @@ class UniversalCsvReader(Reader):
             self._row_number = -1
 
         self._filename = None
-        raise StopIteration
+
+        return
 
     # ------------------------------------------------------------------------------------------------------------------
     def _open_file(self, mode, encoding=None):
