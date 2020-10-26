@@ -42,7 +42,7 @@
     </target>
 
     <!-- All steps for releasing a new version -->
-    <target name="new-version" depends="version,dist,upload"/>
+    <target name="release" depends="version,dist,upload"/>
 
     <!-- Checks the code with pylint -->
     <target name="pylint">
