@@ -1,8 +1,0 @@
-# Must be aligned with setup.py.
-chardet>=3.0.4, <4
-
-
-# For development only.
-coverage<6, >=5.3
-Sphinx<4, >=3.2.1
-sphinx-rtd-theme<0.6, >=0.5.0
