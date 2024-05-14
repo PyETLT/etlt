@@ -22,6 +22,9 @@
                 </a>
             </td>
             <td>
+                <a href="https://github.com/PyETLT/etlt/actions/workflows/unit.yml">
+                    <img src="https://github.com/PyETLT/etlt/actions/workflows/unit.yml/badge.svg" alt="Unit tests"/>
+                </a>
             </td>
             <td>
                 <a href="https://scrutinizer-ci.com/g/PyETLT/etlt/?branch=master">
