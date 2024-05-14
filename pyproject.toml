@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ETLT"
-version = "0.0.0"
+version = "1.0.0"
 description = "Extract Transform Load - but not in that strict order"
 authors = ["Set Based IT Consultancy <info@setbased.nl>"]
 license = "MIT"

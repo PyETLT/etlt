@@ -1,4 +1,4 @@
-# ETLT: Extract Transform Load Transform.
+# ETLT: Extract Transform Load Transform
 
 <table>
     <thead>
