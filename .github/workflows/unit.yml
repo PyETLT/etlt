@@ -34,14 +34,13 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          python -m venv venv 
-          ./venv/bin/python -m pip install --upgrade pip
-          ./venv/bin/pip install poetry
-          ./venv/bin/python -m poetry config virtualenvs.path venv
-          ./venv/bin/python -m poetry config virtualenvs.in-project true
-          ./venv/bin/poetry install --no-root
+          python -m venv .venv 
+          ./.venv/bin/python -m pip install --upgrade pip
+          ./.venv/bin/pip install poetry
+          ./.venv/bin/python -m poetry config virtualenvs.in-project true
+          ./.venv/bin/poetry install --no-root
 
       - name: "Run tests with pytest"
         run: |
-          ./venv/bin/python -m coverage run -m unittest discover -s test -p *Test.py
-          ./venv/bin/python -m coverage xml
+          ./.venv/bin/python -m coverage run -m unittest discover -s test -p *Test.py
+          ./.venv/bin/python -m coverage xml
