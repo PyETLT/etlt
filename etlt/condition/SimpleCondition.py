@@ -9,55 +9,45 @@ class SimpleCondition(Condition):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, field, expression):
+    def __init__(self, field: str, expression: str):
         """
         Object contructor.
 
-        :param str field: The name of the field in the row that must be match against the expression.
-        :param str expression: The expression.
+        :param field: The name of the field in the row that must be match against the expression.
+        :param expression: The expression.
         """
-        self._field = field
+        self._field: str = field
         """
         The name of the field in the row that must be match against the expression.
-
-        :type: str
         """
 
-        self._expression = expression
+        self._expression: str = expression
         """
         The expression.
-
-        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def expression(self):
+    def expression(self) -> str:
         """
         Returns the expression.
-
-        :rtype: str
         """
         return self._expression
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def field(self):
+    def field(self) -> str:
         """
         Returns the name of the field in the row that must be match against the expression.
-
-        :rtype: str
         """
         return self._field
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
     @abc.abstractmethod
-    def scheme(self):
+    def scheme(self) -> str:
         """
         Returns the scheme of the simple condition.
-
-        :rtype: str
         """
         raise NotImplementedError()
 

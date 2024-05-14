@@ -12,9 +12,7 @@ class WhitespaceCleaner:
         """
         Prunes whitespace from a string.
 
-        :param str string: The string.
-
-        :rtype: str
+        :param string: The string.
         """
         # Return empty input immediately.
         if not string:

@@ -1,5 +1,6 @@
 import abc
 import copy
+from typing import List, Optional
 
 
 class Reader(metaclass=abc.ABCMeta):
@@ -12,58 +13,49 @@ class Reader(metaclass=abc.ABCMeta):
         """
         Object constructor.
         """
-        self._fields = None
-        """
-        The fields (or columns) that this reader will read from the source.
 
-        :type: list[str]|None
+        self._fields: Optional[List[str]] = None
+        """
+        The mapping from field (columns) names to the column numbers in the CSV files.
         """
 
-        self._row_number = -1
+        self._row_number: int = -1
         """
         The row number for identifying the row in the source data.
-
-        :type: int
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def fields(self):
+    def fields(self) -> Optional[List[str]]:
         """
         Getter for fields.
-
-        :rtype: list[str]|None
         """
         return copy.copy(self._fields)
 
     # ------------------------------------------------------------------------------------------------------------------
     @fields.setter
-    def fields(self, fields):
+    def fields(self, fields: Optional[List[str]]) -> None:
         """
         Setter for fields. If set to None this reader yields each row from the source as a list. If set to a list of
         field names this reader yields each row from the source as a dictionary using the given field names.
 
-        :param list[str]|None fields: The fields (or columns) that must be read from the source.
+        :param fields: The fields (or columns) that must be read from the source.
         """
         self._fields = fields
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def row_number(self):
+    def row_number(self) -> int:
         """
         Getter for row count.
-
-        :rtype: int
         """
         return self._row_number
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def get_source_name(self):
+    def get_source_name(self) -> str:
         """
         Returns a name for identifying the current source.
-
-        :rtype: str
         """
         raise NotImplementedError()
 

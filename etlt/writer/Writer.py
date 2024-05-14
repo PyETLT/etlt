@@ -1,5 +1,6 @@
 import abc
 import copy
+from typing import Any, Dict, List
 
 
 class Writer(metaclass=abc.ABCMeta):
@@ -13,42 +14,36 @@ class Writer(metaclass=abc.ABCMeta):
         Object constructor.
         """
 
-        self._fields = []
+        self._fields: List[str] = []
         """
-        The fields (or columns) that must be written to the destination.
-
-        :type: list[str]
+        The fields (columns) that must be written to the destination.
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def fields(self):
+    def fields(self) -> List[str]:
         """
         Getter for fields.
-
-        :rtype: list[str]
         """
         return copy.copy(self._fields)
 
     # ------------------------------------------------------------------------------------------------------------------
     @fields.setter
-    def fields(self, fields):
+    def fields(self, fields: List[str]) -> None:
         """
         Setter for fields.
 
-        :param list[str] fields: The fields (or columns) that must be written to the destination.
+        :param fields: The fields (or columns) that must be written to the destination.
         """
         self._fields = fields
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def writerow(self, row):
+    def writerow(self, row: Dict[str, Any]) -> None:
         """
         Writes a row to the destination.
 
-        :param dict[str,T] row: The row.
-
-        :rtype: None
+        :param row: The row.
         """
         raise NotImplementedError()
 

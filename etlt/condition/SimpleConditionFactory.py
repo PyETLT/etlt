@@ -1,9 +1,11 @@
 import re
+from typing import Callable, Dict, Tuple
 
 from etlt.condition.FalseCondition import FalseCondition
 from etlt.condition.GlobCondition import GlobCondition
 from etlt.condition.PlainCondition import PlainCondition
 from etlt.condition.RegularExpressionCondition import RegularExpressionCondition
+from etlt.condition.SimpleCondition import SimpleCondition
 from etlt.condition.TrueCondition import TrueCondition
 
 
@@ -11,22 +13,18 @@ class SimpleConditionFactory:
     """
     A factory for simple conditions.
     """
-    _constructors = {}
+    _constructors: Dict[str, Callable] = {}
     """
     A map from scheme to object constructors.
-
-    dict[str, callable]
     """
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _split_scheme(expression):
+    def _split_scheme(expression: str) -> Tuple[str, str]:
         """
         Splits the scheme and actual expression
 
-        :param str expression: The expression.
-
-        :rtype: str
+        :param expression: The expression.
         """
         match = re.search(r'^([a-z]+):(.*)$', expression)
         if not match:
@@ -40,12 +38,12 @@ class SimpleConditionFactory:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def register_scheme(scheme, constructor):
+    def register_scheme(scheme: str, constructor: Callable) -> None:
         """
         Registers a scheme.
 
-        :param str scheme: The scheme.
-        :param callable constructor: The SimpleCondition constructor.
+        :param scheme: The scheme.
+        :param constructor: The SimpleCondition constructor.
         """
         if not re.search(r'^[a-z]+$', scheme):
             raise ValueError('{0!s} is not a valid scheme'.format(scheme))
@@ -57,13 +55,11 @@ class SimpleConditionFactory:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def create_condition(field, expression):
+    def create_condition(field: str, expression: str) -> SimpleCondition:
         """
 
         :param str field: The name of the field.
         :param expression: The expression (including scheme).
-
-        :rtype: gdwh.map.SimpleCondition.SimpleCondition
         """
         scheme, expression = SimpleConditionFactory._split_scheme(expression)
 

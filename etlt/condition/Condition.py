@@ -1,4 +1,5 @@
 import abc
+from typing import Any, Dict
 
 
 class Condition(metaclass=abc.ABCMeta):
@@ -8,13 +9,11 @@ class Condition(metaclass=abc.ABCMeta):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def match(self, row):
+    def match(self, row: Dict[str, Any]) -> bool:
         """
         Returns True if the row matches this condition. Returns False otherwise.
 
-        :param dict row: The row.
-
-        :rtype: bool
+        :param row: The row.
         """
         raise NotImplementedError()
 

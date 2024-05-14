@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Optional, Set, Tuple
+
 from etlt.helper.Allen import Allen
 from etlt.helper.Type2Helper import Type2Helper
 
@@ -12,15 +14,13 @@ class Type2CondenseHelper(Type2Helper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _distinct(row1, row2):
+    def _distinct(row1: Tuple[int, int], row2: Tuple[int, int]) -> Optional[List[Tuple[int, int]]]:
         """
         Returns a list of distinct (or none overlapping) intervals if two intervals are overlapping. Returns None if
         the two intervals are none overlapping. The list can have 2 or 3 intervals.
 
-        :param tuple[int,int] row1: The first interval.
-        :param tuple[int,int] row2: The second interval.
-
-        :rtype: None|list(tuple[int,int])
+        :param row1: The first interval.
+        :param row2: The second interval.
         """
         relation = Allen.relation(row1[0], row1[1], row2[0], row2[1])
 
@@ -98,12 +98,12 @@ class Type2CondenseHelper(Type2Helper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _add_interval(all_intervals, new_interval):
+    def _add_interval(all_intervals: Set[Tuple[int, int]], new_interval: Tuple[int, int]) -> None:
         """
         Adds a new interval to a set of none overlapping intervals.
 
-        :param set[(int,int)] all_intervals: The set of distinct intervals.
-        :param (int,int) new_interval: The new interval.
+        :param all_intervals: The set of distinct intervals.
+        :param new_interval: The new interval.
         """
         intervals = None
         old_interval = None
@@ -121,13 +121,11 @@ class Type2CondenseHelper(Type2Helper):
                 Type2CondenseHelper._add_interval(all_intervals, distinct_interval)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _derive_distinct_intervals(self, rows):
+    def _derive_distinct_intervals(self, rows: List[Dict[str, Any]]) -> Set[Tuple[int, int]]:
         """
         Returns the set of distinct intervals in a row set.
 
-        :param list[dict[str,T]] rows: The rows set.
-
-        :rtype: set[(int,int)]
+        :param rows: The rows set.
         """
         ret = set()
         for row in rows:
@@ -136,7 +134,7 @@ class Type2CondenseHelper(Type2Helper):
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
-    def condense(self):
+    def condense(self) -> None:
         """
         Condense the data set to the distinct intervals based on the pseudo key.
         """

@@ -10,7 +10,7 @@ class DateCleanerTest(unittest.TestCase):
         self.assertEqual(expected, clean)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test00(self):
+    def test00(self) -> None:
         """
         Tests with string that are not a date at all.
         """
@@ -19,7 +19,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('2000-123-123', '2000-123-123')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test01a(self):
+    def test01a(self) -> None:
         """
         Tests without a separator.
         """
@@ -30,7 +30,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('2014-01-03T14:15:00', '03JAN2014:14:15:00')  # DDMONYYYY HH:mm:ssformat.
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test01b(self):
+    def test01b(self) -> None:
         """
         Tests without a separator ignoring time.
         """
@@ -41,7 +41,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('2014-01-03', '03JAN2014:14:15:00', True)  # DDMONYYYY HH:mm:ssformat.
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test02(self):
+    def test02(self) -> None:
         """
         Tests with a dash as separator.
         """
@@ -53,7 +53,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1971-07-01', '1-7-71')  # D-M-YY format.
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test03(self):
+    def test03(self) -> None:
         """
         Tests with a dot as separator.
         """
@@ -65,7 +65,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1971-07-01', '1.7.71')  # D.M.YY format.
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test04(self):
+    def test04(self) -> None:
         """
         Tests with a slash separator.
         """
@@ -77,7 +77,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1971-07-01', '1/7/71')  # D/M/YY format.
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test05(self):
+    def test05(self) -> None:
         """
         Tests with a space as separator.
         """
@@ -89,7 +89,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1971-07-01', '1 7 71')  # D M YY format.
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test06(self):
+    def test06(self) -> None:
         """
         Tests with trailing midnight time.
         """
@@ -102,7 +102,7 @@ class DateCleanerTest(unittest.TestCase):
         self._test('1966-04-10', '1966.04.10 00:00:00.000')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test07(self):
+    def test07(self) -> None:
         """
         Tests with trailing time.
         """

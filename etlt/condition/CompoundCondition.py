@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import List
 
 from etlt.condition.Condition import Condition
 
@@ -13,19 +14,17 @@ class CompoundCondition(Condition, ABC):
         """
         Object constructor.
         """
-        self._conditions = []
+        self._conditions: List[Condition] = []
         """
         The list of conditions of this compound condition.
-
-        :type: list[gdwh.map.Condition.Condition]
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def append_condition(self, condition):
+    def append_condition(self, condition: Condition) -> None:
         """
         Appends a child condition to the list of conditions of this compound condition.
 
-        :param gdwh.map.Condition.Condition condition: The child conditions.
+        :param condition: The child conditions.
         """
         self._conditions.append(condition)
 

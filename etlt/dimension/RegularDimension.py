@@ -1,4 +1,5 @@
 import abc
+from typing import Any, Dict, Optional
 
 
 class RegularDimension(metaclass=abc.ABCMeta):
@@ -12,25 +13,20 @@ class RegularDimension(metaclass=abc.ABCMeta):
         Object constructor.
         """
 
-        self._map = {}
+        self._map: Dict[Any, Optional[int]] = {}
         """
         The map from natural keys to a technical keys.
-
-        :type: dict[T, int|None]
         """
 
-        # Pre-load look up data in to the map.
         self.pre_load_data()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_id(self, natural_key, enhancement=None):
+    def get_id(self, natural_key: Any, enhancement: Any = None) -> Optional[int]:
         """
         Returns the technical ID for a natural key or None if the given natural key is not valid.
 
-        :param T natural_key: The natural key.
-        :param T enhancement: Enhancement data of the dimension row.
-
-        :rtype: int|None
+        :param natural_key: The natural key.
+        :param enhancement: Enhancement data of the dimension row.
         """
         # If the natural key is known return the technical ID immediately.
         if natural_key in self._map:
@@ -53,49 +49,41 @@ class RegularDimension(metaclass=abc.ABCMeta):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def call_stored_procedure(self, natural_key, enhancement):
+    def call_stored_procedure(self, natural_key: Any, enhancement: Any) -> Optional[int]:
         """
         Calls a stored procedure for getting the technical key of a natural key. Returns the technical ID or None if
         the given natural key is not valid.
 
-        :param T natural_key: The natural key.
-        :param T enhancement: Enhancement data of the dimension row.
-
-        :rtype: int|None
+        :param natural_key: The natural key.
+        :param enhancement: Enhancement data of the dimension row.
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def pre_load_data(self):
+    def pre_load_data(self) -> None:
         """
-        Can be overridden to pre-load lookup data from a dimension table.
-
-        :rtype: None
+        Can be overridden to preload lookup data from a dimension table.
         """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def pre_call_stored_procedure(self):
+    def pre_call_stored_procedure(self) -> None:
         """
         This method is invoked before call the stored procedure for getting the technical key of a natural key.
 
         In a concurrent environment override this method to acquire a lock on the dimension or dimension hierarchy.
-
-        :rtype: None
         """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def post_call_stored_procedure(self, success):
+    def post_call_stored_procedure(self, success: bool) -> None:
         """
         This method is invoked after calling the stored procedure for getting the technical key of a natural key.
 
         In a concurrent environment override this method to release a lock on the dimension or dimension hierarchy and
         to commit or rollback the transaction.
 
-        :param bool success: True: the stored procedure is executed successfully. False: an exception has occurred.
-
-        :rtype: None
+        :param success: True: the stored procedure is executed successfully. False: an exception has occurred.
         """
         pass
 

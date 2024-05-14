@@ -5,7 +5,7 @@ from etlt.condition.InListCondition import InListCondition
 
 class InListConditionTest(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
-    def test01(self):
+    def test01(self) -> None:
         """
         Test InListCondition with various expressions and values.
         """

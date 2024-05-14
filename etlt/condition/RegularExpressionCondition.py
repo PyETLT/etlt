@@ -1,4 +1,5 @@
 import re
+from typing import Any, Dict
 
 from etlt.condition.SimpleCondition import SimpleCondition
 
@@ -9,13 +10,11 @@ class RegularExpressionCondition(SimpleCondition):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def match(self, row):
+    def match(self, row: Dict[str, Any]) -> bool:
         """
         Returns True if the field matches the regular expression of this simple condition. Returns False otherwise.
 
-        :param dict row: The row.
-
-        :rtype: bool
+        :param row: The row.
         """
         if re.search(self._expression, row[self._field]):
             return True
@@ -24,11 +23,9 @@ class RegularExpressionCondition(SimpleCondition):
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def scheme(self):
+    def scheme(self) -> str:
         """
         Returns 're'.
-
-        :rtype: str
         """
         return 're'
 

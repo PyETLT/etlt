@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Optional, Tuple
+
 from etlt.helper.Type2Helper import Type2Helper
 
 
@@ -8,16 +10,14 @@ class Type2JoinHelper(Type2Helper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _intersect(start1, end1, start2, end2):
+    def _intersect(start1: int, end1: int, start2: int, end2: int) -> Tuple[Optional[int], Optional[int]]:
         """
         Returns the intersection of two intervals. Returns (None,None) if the intersection is empty.
 
-        :param int start1: The start date of the first interval.
-        :param int end1: The end date of the first interval.
-        :param int start2: The start date of the second interval.
-        :param int end2: The end date of the second interval.
-
-        :rtype: tuple[int|None,int|None]
+        :param start1: The start date of the first interval.
+        :param end1: The end date of the first interval.
+        :param start2: The start date of the second interval.
+        :param end2: The end date of the second interval.
         """
         start = max(start1, start2)
         end = min(end1, end2)
@@ -28,14 +28,12 @@ class Type2JoinHelper(Type2Helper):
         return start, end
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _additional_rows_date2int(self, keys, rows):
+    def _additional_rows_date2int(self, keys: List[Tuple[str, str]], rows: List[Dict[str, Any]]) -> None:
         """
         Replaces start and end dates of the additional date intervals in the row set with their integer representation
 
-        :param list[tuple[str,str]] keys: The other keys with start and end date.
-        :param list[dict[str,T]] rows: The list of rows.
-
-        :rtype: list[dict[str,T]]
+        :param keys: The other keys with start and end date.
+        :param rows: The list of rows.
         """
         for row in rows:
             for key_start_date, key_end_date in keys:
@@ -45,15 +43,13 @@ class Type2JoinHelper(Type2Helper):
                     row[key_end_date] = self._date2int(row[key_end_date])
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _intersection(self, keys, rows):
+    def _intersection(self, keys: List[Tuple[str, str]], rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Computes the intersection of the date intervals of two or more reference data sets. If the intersection is empty
         the row is removed from the group.
 
-        :param list[tuple[str,str]] keys: The other keys with start and end date.
-        :param list[dict[str,T]] rows: The list of rows.
-
-        :rtype: list[dict[str,T]]
+        :param keys: The other keys with start and end date.
+        :param rows: The list of rows.
         """
         # If there are no other keys with start and end date (i.e. nothing to merge) return immediately.
         if not keys:
@@ -83,11 +79,11 @@ class Type2JoinHelper(Type2Helper):
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
-    def merge(self, keys):
+    def merge(self, keys: List[Tuple[str, str]]) -> None:
         """
         Merges the join on pseudo keys of two or more reference data sets.
 
-        :param list[tuple[str,str]] keys: For each data set the keys of the start and end date.
+        :param keys: For each data set the keys of the start and end date.
         """
         deletes = []
         for pseudo_key, rows in self._rows.items():

@@ -1,6 +1,8 @@
 import bz2
+import copy
 import csv
 from itertools import zip_longest
+from typing import Dict, List, Optional, Union
 
 import chardet
 
@@ -10,7 +12,7 @@ from etlt.reader.UniversalCsvReaderFormatHelper import UniversalCsvReaderFormatH
 
 class UniversalCsvReader(Reader):
     """
-    An universal CSV file reader.
+    A universal CSV file reader.
     - Open uncompressed and gz, bz2 compressed files.
     - Auto encoding and field delimiter detection.
     """
@@ -21,7 +23,7 @@ class UniversalCsvReader(Reader):
     delimiters = [',', ';', '\t', '|', ':']
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, filenames, format_helper=None):
+    def __init__(self, filenames: List[str], format_helper=None):
         """
         Object constructor.
 
@@ -29,11 +31,9 @@ class UniversalCsvReader(Reader):
         """
         Reader.__init__(self)
 
-        self._filenames = filenames
+        self._filenames: List[str] = filenames
         """
         The name of the CSV files.
-
-        :type: list
         """
 
         self._file = None
@@ -48,32 +48,29 @@ class UniversalCsvReader(Reader):
         :type: _csv.reader
         """
 
-        self._filename = None
+        self._mapping: Optional[Dict[str, int]] = None
+        """
+        The mapping from column names to column numbers.
+        """
+
+        self._filename: Optional[str] = None
         """
         The name of the current file.
-
-        :type: str|None
         """
 
         self._helper = UniversalCsvReaderFormatHelper() if not format_helper else format_helper
         """
         The helper for detecting the appropriate formatting parameters for reading the current CSV file.
-
-        :type: etlt.reader.UniversalCsvReaderFormatHelper.UniversalCsvReaderFormatHelper
         """
 
-        self._formatting_parameters = dict()
+        self._formatting_parameters: Dict[str, str] = dict()
         """
         The CSV formatting parameters for reading the current CSV file.
-
-        :type: dict[str,str]
         """
 
-        self._sample = None
+        self._sample: Optional[Union[str, bytes]] = None
         """
         The sample when detecting automatically formatting parameters.
-
-        :type: None|str|bytes
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -86,11 +83,9 @@ class UniversalCsvReader(Reader):
         self._close()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_source_name(self):
+    def get_source_name(self) -> Optional[str]:
         """
         Returns the current source file.
-
-        :rtype str|None:
         """
         return self._filename
 
@@ -103,10 +98,14 @@ class UniversalCsvReader(Reader):
             self._open()
             for row in self._csv_reader:
                 self._row_number += 1
-                if self._fields:
+                if self._mapping:
+                    yield {column_name: row[index] if 0 <= index < len(row) else '' for column_name, index in
+                           self._mapping.items()}
+                elif self._fields:
                     yield dict(zip_longest(self._fields, row, fillvalue=''))
                 else:
                     yield row
+
             self._close()
             self._row_number = -1
 
@@ -115,12 +114,28 @@ class UniversalCsvReader(Reader):
         return
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _open_file(self, mode, encoding=None):
+    @property
+    def mapping(self) -> Optional[Dict[str, int]]:
+        """
+        Getter for mapping.
+        """
+        return copy.copy(self._mapping)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @mapping.setter
+    def mapping(self, mapping: Optional[Dict[str, int]]):
+        """
+
+        """
+        self._mapping = mapping
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _open_file(self, mode: str, encoding: Optional[str] = None) -> None:
         """
         Opens the next current file.
 
-        :param str mode: The mode for opening the file.
-        :param str encoding: The encoding of the file.
+        :param mode: The mode for opening the file.
+        :param encoding: The encoding of the file.
         """
         if self._filename[-4:] == '.bz2':
             self._file = bz2.open(self._filename, mode=mode, encoding=encoding)
@@ -128,7 +143,7 @@ class UniversalCsvReader(Reader):
             self._file = open(self._filename, mode=mode, encoding=encoding)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _close(self):
+    def _close(self) -> None:
         """
         Closes the current file.
         """
@@ -136,7 +151,7 @@ class UniversalCsvReader(Reader):
             self._file.close()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_sample(self, mode, encoding):
+    def _get_sample(self, mode: str, encoding: Optional[str]) -> None:
         """
         Get a sample from the next current input file.
 
@@ -148,15 +163,14 @@ class UniversalCsvReader(Reader):
         self._file.close()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _detect_encoding(self):
+    def _detect_encoding(self) -> None:
         """
         Detects the encoding og the current file.
-        :return:
         """
         self._formatting_parameters['encoding'] = chardet.detect(self._sample)['encoding']
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _detect_delimiter(self):
+    def _detect_delimiter(self) -> None:
         """
         Detects the field delimiter in the sample data.
         """
@@ -171,7 +185,7 @@ class UniversalCsvReader(Reader):
         self._formatting_parameters['delimiter'] = candidate_value
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _detect_line_ending(self):
+    def _detect_line_ending(self) -> None:
         """
         Detects the line ending in the sample data.
         """
@@ -186,17 +200,18 @@ class UniversalCsvReader(Reader):
         self._formatting_parameters['line_terminator'] = candidate_value
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _open(self):
+    def _open(self) -> None:
         """
         Opens the next current file with proper settings for encoding and delimiter.
         """
         self._sample = None
 
-        formatting_parameters0 = {'encoding':        'auto',
-                                  'delimiter':       'auto',
-                                  'line_terminator': 'auto',
-                                  'escape_char':     '\\',
-                                  'quote_char':      '"'}
+        formatting_parameters0 = {
+                'encoding':        'auto',
+                'delimiter':       'auto',
+                'line_terminator': 'auto',
+                'escape_char':     '\\',
+                'quote_char':      '"'}
         formatting_parameters1 = self._helper.pass1(self._filename, formatting_parameters0)
         self._formatting_parameters = formatting_parameters1
 

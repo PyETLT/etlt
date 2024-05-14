@@ -1,4 +1,5 @@
 import abc
+from typing import Any, Optional
 
 from etlt.writer.Writer import Writer
 
@@ -15,34 +16,28 @@ class SqlLoaderWriter(Writer):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, filename, encoding='utf8'):
+    def __init__(self, filename: str, encoding: str = 'utf8'):
         """
         Object constructor.
 
-        :param str filename: The destination file for the rows.
-        :param str encoding: The encoding of the text of the destination file.
+        :param filename: The destination file for the rows.
+        :param encoding: The encoding of the text of the destination file.
         """
         Writer.__init__(self)
 
-        self._filename = filename
+        self._filename: str = filename
         """
         The name of the destination file.
-
-        :type: str
         """
 
-        self._encoding = encoding
+        self._encoding: str = encoding
         """
         The encoding of the text in the destination file.
-
-        :type: str
         """
 
-        self._file = None
+        self._file: Any = None
         """
         The underling file object.
-
-        :type: T
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -55,54 +50,49 @@ class SqlLoaderWriter(Writer):
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def filename(self):
+    def filename(self) -> str:
         """
-        Getter for filename.
-
-        :rtype: str
+        Returns the filename.
         """
         return self._filename
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def encoding(self):
+    def encoding(self) -> str:
         """
-        Getter for encoding.
-
-        :rtype: str
+        Returns the encoding.
         """
         return self._encoding
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def get_bulk_load_sql(self, table_name):
+    def get_bulk_load_sql(self, table_name: str, partition: Optional[str] = None) -> str:
         """
         Returns a SQL statement for bulk loading the data writen to the destination file into a table.
 
-        :param str table_name: The name of the table.
-
-        :rtype: str
+        :param table_name: The name of the table.
+        :param partition: When applicable, the name of the partition in which the data must be loaded.`
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def register_handler(class_name, handler):
+    def register_handler(class_name: str, handler: callable) -> None:
         """
         Registers a handler for writing instances of a class as a field to the destination file.
 
-        :param str class_name: The name of the class.
-        :param callable handler: The handler. This handler will be called with two arguments: the object which value
-                                 must be writen to the destination file, the file handler.
+        :param class_name: The name of the class.
+        :param handler: The handler. This handler will be called with two arguments: the object which value must be
+                        writen to the destination file, the file handler.
         """
         SqlLoaderWriter.handlers[class_name] = handler
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_field(self, value):
+    def _write_field(self, value: Any):
         """
-        Write a single field to the destination file.
+        Writes a single field to the destination file.
 
-        :param T value: The value of the field.
+        :param value: The value of the field.
         """
         class_name = str(value.__class__)
         if class_name not in self.handlers:

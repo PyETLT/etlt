@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from etlt.condition.SimpleCondition import SimpleCondition
 
 
@@ -7,23 +9,19 @@ class TrueCondition(SimpleCondition):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def match(self, row):
+    def match(self, row: Dict[str, Any]) -> True:
         """
         Always returns true.
 
         :param dict row: The row, ignored.
-
-        :rtype: True
         """
         return True
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def scheme(self):
+    def scheme(self) -> str:
         """
         Returns 'true'.
-
-        :rtype: str
         """
         return 'true'
 

@@ -9,7 +9,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense01a(self):
+    def test_condense01a(self) -> None:
         """
         Test condense with 1 interval and one row.
         """
@@ -30,7 +30,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense01b(self):
+    def test_condense01b(self) -> None:
         """
         Test condense with 1 interval and 2 rows (X is equal to Y).
         """
@@ -55,7 +55,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense02a(self):
+    def test_condense02a(self) -> None:
         """
         Test condense with 2 distinct intervals and 2 rows (X takes place before Y).
         """
@@ -83,7 +83,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense02b(self):
+    def test_condense02b(self) -> None:
         """
         Test condense with 2 distinct intervals and 2 rows.
         """
@@ -115,7 +115,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense02c(self):
+    def test_condense02c(self) -> None:
         """
         Test condense with 2 distinct intervals and 2 rows (X takes place before Y).
         """
@@ -143,7 +143,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense03a(self):
+    def test_condense03a(self) -> None:
         """
         Test condense with 2 overlapping intervals and 2 rows (X overlaps with Y).
         """
@@ -175,7 +175,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense03b(self):
+    def test_condense03b(self) -> None:
         """
         Test condense with 2 overlapping intervals and 3 rows.
         """
@@ -211,7 +211,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense03c(self):
+    def test_condense03c(self) -> None:
         """
         Test condense with 2 overlapping intervals and 2 rows (X overlaps with Y).
         """
@@ -242,7 +242,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense04a(self):
+    def test_condense04a(self) -> None:
         """
         Test condense with 2 overlapping intervals and 2 rows (X starts Y).
         """
@@ -270,7 +270,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense04b(self):
+    def test_condense04b(self) -> None:
         """
         Test condense with 2 overlapping intervals adn 3 rows.
         """
@@ -302,7 +302,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense05a(self):
+    def test_condense05a(self) -> None:
         """
         Test condense with 2 overlapping intervals and 2 rows (X during Y).
         """
@@ -333,7 +333,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense05b(self):
+    def test_condense05b(self) -> None:
         """
         Test condense with 2 overlapping intervals and 3 rows.
         """
@@ -368,7 +368,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense05c(self):
+    def test_condense05c(self) -> None:
         """
         Test condense with 2 overlapping intervals and 2 rows (X during Y).
         """
@@ -399,7 +399,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense06a(self):
+    def test_condense06a(self) -> None:
         """
         Test condense with 2 overlapping intervals and 2 rows (X finishes Y).
         """
@@ -427,7 +427,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense06b(self):
+    def test_condense06b(self) -> None:
         """
         Test condense with 2 overlapping intervals and 3 rows
         """
@@ -459,7 +459,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense06c(self):
+    def test_condense06c(self) -> None:
         """
         Test condense with 2 overlapping intervals and 2 rows (X finishes Y).
         """
@@ -487,7 +487,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense07a(self):
+    def test_condense07a(self) -> None:
         """
         Test condense with 2 equal intervals and 2 rows.
         """
@@ -513,7 +513,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense07b(self):
+    def test_condense07b(self) -> None:
         """
         Test condense with 2 equal intervals and 3 rows.
         """
@@ -543,7 +543,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense8a(self):
+    def test_condense8a(self) -> None:
         """
         Test with 3 intervals.
         """
@@ -584,7 +584,7 @@ class Type2CondenseHelperTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_condense8b(self):
+    def test_condense8b(self) -> None:
         """
         Test with 5 intervals.
         """

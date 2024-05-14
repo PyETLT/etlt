@@ -1,4 +1,5 @@
 import fnmatch
+from typing import Any, Dict
 
 from etlt.condition.SimpleCondition import SimpleCondition
 
@@ -9,23 +10,19 @@ class GlobCondition(SimpleCondition):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def match(self, row):
+    def match(self, row: Dict[str, Any]) -> bool:
         """
-        Returns True if the field matches the glob expression of this simple condition. Returns False otherwise.
+        Returns whether the field matches the glob expression of this simple condition.
 
         :param dict row: The row.
-
-        :rtype: bool
         """
         return fnmatch.fnmatchcase(row[self._field], self._expression)
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def scheme(self):
+    def scheme(self) -> str:
         """
         Returns 'glob'.
-
-        :rtype: str
         """
         return 'glob'
 

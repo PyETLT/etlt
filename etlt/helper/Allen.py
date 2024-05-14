@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class Allen:
     """
     Utility class for Allen's interval algebra, https://en.wikipedia.org/wiki/Allen%27s_interval_algebra.
@@ -19,16 +22,14 @@ class Allen:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def relation(x_start, x_end, y_start, y_end):
+    def relation(x_start: int, x_end: int, y_start: int, y_end: int) -> Optional[int]:
         """
         Returns the relation between two intervals.
 
-        :param int x_start: The start point of the first interval.
-        :param int x_end: The end point of the first interval.
-        :param int y_start: The start point of the second interval.
-        :param int y_end: The end point of the second interval.
-
-        :rtype: int|None
+        :param x_start: The start point of the first interval.
+        :param x_end: The end point of the first interval.
+        :param y_start: The start point of the second interval.
+        :param y_end: The end point of the second interval.
         """
 
         if (x_end - x_start) < 0 or (y_end - y_start) < 0:

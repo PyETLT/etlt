@@ -9,7 +9,7 @@ class Type2JoinTest(unittest.TestCase):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_enumerate(self):
+    def test_enumerate(self) -> None:
         """
         Test enumeration of rows.
         """

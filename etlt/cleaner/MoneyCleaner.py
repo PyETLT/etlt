@@ -13,9 +13,7 @@ class MoneyCleaner:
         """
         Converts a number to a number with decimal point.
 
-        :param str|None amount: The input number.
-
-        :rtype: str|None
+        :param amount: The input number.
         """
         # Return empty input immediately.
         if not amount:
@@ -32,6 +30,10 @@ class MoneyCleaner:
         if re.search(r'^[0-9]+(,[0-9]{1,2}$)', amount):
             # Assume amount is in 123,12 or in 123,1 format (Dutch).
             return amount.replace(',', '.')
+
+        if re.search(r'^[0-9]{0,2}(\.[0-9]{3})+(\.[0-9]{2})?$', amount):
+            # Amount is in 1.123.12 format.
+            return amount.replace('.', '', 1)
 
         # Format of amount is not recognized. Return amount.
         return amount

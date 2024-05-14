@@ -1,4 +1,7 @@
+from typing import Any, Dict, List
+
 from etlt.condition.Condition import Condition
+from etlt.condition.SimpleCondition import SimpleCondition
 from etlt.condition.SimpleConditionFactory import SimpleConditionFactory
 
 
@@ -8,50 +11,42 @@ class InListCondition(Condition):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, field):
+    def __init__(self, field: str):
         """
         Object contructor.
 
         :param str field: The name of the field in the row that must be match against the expression.
         """
-        self._field = field
+        self._field: str = field
         """
         The name of the field in the row that must be match against the list of values.
-
-        :type: str
         """
 
-        self._values = list()
+        self._values: List[str] = list()
         """
         The list of values of plain conditions.
-
-        :type: list[str]
         """
 
-        self._conditions = list()
+        self._conditions: List[SimpleCondition] = list()
         """
         The list of other conditions.
-
-        :type: list[etlt.condition.SimpleCondition.SimpleCondition]
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def field(self):
+    def field(self) -> str:
         """
         Getter for field.
-
-        :rtype: str
         """
         return self._field
 
     # ------------------------------------------------------------------------------------------------------------------
-    def populate_values(self, rows, field):
+    def populate_values(self, rows: List[Dict[str, Any]], field: str):
         """
         Populates the filter values of this filter using list of rows.
 
-        :param list[dict[str,T]] rows: The row set.
-        :param str field: The field name.
+        :param rows: The row set.
+        :param field: The field name.
         """
         self._values.clear()
         for row in rows:
@@ -62,13 +57,11 @@ class InListCondition(Condition):
                 self._conditions.append(condition)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def match(self, row):
+    def match(self, row: Dict[str, Any]) -> bool:
         """
-        Returns True if the field is in the list of conditions. Returns False otherwise.
+        Returns whether the field is in the list of conditions.
 
         :param dict row: The row.
-
-        :rtype: bool
         """
         if row[self._field] in self._values:
             return True
