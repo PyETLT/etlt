@@ -37,7 +37,7 @@ jobs:
           python -m venv venv 
           ./venv/bin/python -m pip install --upgrade pip
           ./venv/bin/pip install poetry
-          ./venv/bin/python -m poetry config virtualenvs.path ./venv
+          ./venv/bin/python -m poetry config virtualenvs.path venv
           ./venv/bin/python -m poetry config virtualenvs.in-project true
           ./venv/bin/poetry install --no-root
 
